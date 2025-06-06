@@ -64,6 +64,23 @@ body {
   flex-direction: column;
 }
 
+.sidebar nav a {
+  display: block;
+  padding: 12px 0;
+  color: #b3b3b3;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.sidebar nav a:hover {
+    color: #ffffff;
+}
+
+.sidebar nav a.active {
+  color: #ffffff;
+}
+
 .sidebar nav ul {
   list-style: none;
   padding: 24px 0 0 0;
