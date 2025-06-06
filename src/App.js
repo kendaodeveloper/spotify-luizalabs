@@ -1,24 +1,36 @@
-import logo from './logo.svg';
+import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
 import './App.css';
+import Callback from './pages/Callback';
+
+const AppContent = () => {
+  const navigate = useNavigate();
+  const token = localStorage.getItem('spotify_access_token');
+
+  const handleLogout = () => {
+    localStorage.removeItem('spotify_access_token');
+    navigate('/login');
+  };
+  
+  const RedirectPath = () => {
+    return token ? <Home token={token} onLogout={handleLogout} /> : <Login />;
+  };
+
+  return (
+    <Routes>
+      <Route path="/" element={<RedirectPath />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/callback" element={<Callback />} />
+    </Routes>
+  );
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <AppContent />
+    </BrowserRouter>
   );
 }
 
