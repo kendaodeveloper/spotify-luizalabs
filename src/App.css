@@ -1,7 +1,8 @@
-/* src/App.css */
 body {
   font-family: sans-serif;
   background-color: #121212;
+  background-image: radial-gradient(circle at top, #2a2a2a, #121212);
+  background-attachment: fixed;
   color: #fff;
   margin: 0;
 }
@@ -35,11 +36,12 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
   margin-top: 30px;
-  transition: transform 0.2s ease-in-out;
+  transition: all 0.2s ease-in-out;
 }
 
 .login-button:hover {
   transform: scale(1.05);
+  background-color: #1ed760;
 }
 
 .spotify-icon {
@@ -51,32 +53,43 @@ body {
 /* --- Home Layout --- */
 .home-layout {
   display: flex;
+  height: 100vh;
 }
 
 .sidebar {
   width: 240px;
   background-color: #040404;
-  height: 100vh;
-  padding: 20px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
 }
+
 .sidebar nav ul {
   list-style: none;
-  padding: 0;
+  padding: 24px 0 0 0;
+  margin: 0;
 }
+
 .sidebar nav li {
-  padding: 10px 0;
+  padding: 12px 0;
   cursor: pointer;
-}
-.sidebar nav li.active {
-  color: #1DB954;
+  color: #b3b3b3;
   font-weight: bold;
+  transition: color 0.2s ease-in-out;
+}
+
+.sidebar nav li:hover {
+    color: #ffffff;
+}
+
+.sidebar nav li.active {
+  color: #ffffff;
 }
 
 .main-content {
   flex-grow: 1;
-  padding: 20px 40px;
+  padding: 24px 40px;
   overflow-y: auto;
-  height: calc(100vh - 40px);
 }
 
 .profile-container {
@@ -87,12 +100,19 @@ body {
 }
 
 .logout-button {
-  background-color: #535353;
+  background-color: #333;
   color: #fff;
   border: none;
   padding: 10px 20px;
   border-radius: 50px;
   cursor: pointer;
+  font-weight: bold;
+  transition: all 0.2s ease-in-out;
+}
+
+.logout-button:hover {
+    background-color: #535353;
+    transform: scale(1.05);
 }
 
 /* --- Grid & Cards --- */
@@ -100,28 +120,36 @@ section {
   margin-bottom: 40px;
 }
 
+section h2 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
 .grid-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 20px;
+  gap: 24px;
 }
 
 .card {
   background-color: #181818;
-  padding: 15px;
+  padding: 16px;
   border-radius: 8px;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.3s ease-in-out;
 }
 
 .card:hover {
   background-color: #282828;
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
 }
 
 .card img {
   width: 100%;
   border-radius: 4px;
-  margin-bottom: 10px;
+  margin-bottom: 16px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.4);
 }
 
 .card-content h4 {
@@ -129,6 +157,7 @@ section {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-size: 16px;
 }
 
 .card-content p {

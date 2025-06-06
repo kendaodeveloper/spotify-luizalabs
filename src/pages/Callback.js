@@ -1,13 +1,19 @@
 import { useEffect } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
+import { useAuth } from './../context/AuthContext';
 
 const Callback = () => {
   const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
+  const { token, login, logout } = useAuth();
 
   useEffect(() => {
+    if (token) {
+      return; // already logged in
+    }
+
     const code = searchParams.get('code');
-    const codeVerifier = window.localStorage.getItem('code_verifier');
+    const codeVerifier = window.sessionStorage.getItem('code_verifier');
+    const error = searchParams.get('error');
 
     if (code && codeVerifier) {
       const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -27,27 +33,34 @@ const Callback = () => {
       })
       .then(res => {
         if (!res.ok) {
-          throw new Error('Falha ao trocar o código pelo token');
+          throw new Error('Failed to get token');
         }
         return res.json();
       })
       .then(data => {
         if (data.access_token) {
-          window.localStorage.removeItem('code_verifier');
-          window.localStorage.setItem('spotify_access_token', data.access_token);
-          navigate('/');
+          console.log('Login with success!');
+          login(data.access_token);
+        } else {
+          console.warn('Error fetching access_token!');
+          logout();
         }
       })
       .catch(err => {
-        console.error('Erro na troca do token:', err);
-        navigate('/login');
+        console.error('Error fetching token:', err);
+        logout();
       });
     } else {
-        navigate('/login');
+      if (error) {
+        console.warn('Unable to log in: ' + error);
+      } else {
+        console.warn('Error getting token parameters!');
+      }
+      logout();
     }
-  }, [searchParams, navigate]);
+  }, [searchParams, token, login, logout]);
 
-  return <div>Autenticando...</div>;
+  return <div>Autenticando e redirecionando...</div>;
 };
 
 export default Callback;

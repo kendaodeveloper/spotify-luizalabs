@@ -8,6 +8,18 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 npx create-react-app spotify-luizalabs
 ```
 
+## Spotify App Setup
+
+Before running the app, you need to register it on the Spotify Developer Dashboard and configure your environment variables.
+
+1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
+2. Log in with your Spotify account.
+3. Click **Create an App** and fill in the required details.
+4. In the app settings, add the following **Redirect URI** (callback URL): http://127.0.0.1:3000/callback
+5. Save your changes.
+6. Copy the **Client ID** from the dashboard.
+7. Add the following line to the `.env` file: **REACT_APP_CLIENT_ID=value**.
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -15,10 +27,12 @@ In the project directory, you can run:
 ### `npm start`
 
 Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Open [http://127.0.0.1:3000](http://127.0.0.1:3000) to view it in your browser.
 
 The page will reload when you make changes.\
 You may also see any lint errors in the console.
+
+**Important:** Use `127.0.0.1` instead of `localhost`, because `127.0.0.1` is the callback address registered in the Spotify Developer Dashboard. Using `localhost` will cause issues with OAuth redirects and storage access.
 
 ### `npm test`
 

@@ -1,27 +1,34 @@
-import { BrowserRouter, Routes, Route, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { AuthProvider, useAuth } from './context/AuthContext';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import './App.css';
 import Callback from './pages/Callback';
 
 const AppContent = () => {
-  const navigate = useNavigate();
-  const token = localStorage.getItem('spotify_access_token');
+  useEffect(() => {
+    if (window.location.hostname === 'localhost') {
+      window.location.hostname = '127.0.0.1'; // force not to use localhost
+    }
+  }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('spotify_access_token');
-    navigate('/login');
-  };
-  
-  const RedirectPath = () => {
-    return token ? <Home token={token} onLogout={handleLogout} /> : <Login />;
-  };
+  const { token } = useAuth();
 
   return (
     <Routes>
-      <Route path="/" element={<RedirectPath />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/callback" element={<Callback />} />
+      <Route 
+        path="/" 
+        element={token ? <Home /> : <Login />}
+      />
+      <Route
+        path="/login"
+        element={<Login />}
+      />
+      <Route 
+        path="/callback" 
+        element={<Callback />} 
+      />
     </Routes>
   );
 }
@@ -29,7 +36,9 @@ const AppContent = () => {
 function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </BrowserRouter>
   );
 }
