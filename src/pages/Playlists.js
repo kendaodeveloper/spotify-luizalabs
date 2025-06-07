@@ -19,6 +19,7 @@ const Playlists = () => {
   const fetchPlaylists = useCallback(() => {
     if (!token) return;
 
+    // TODO: Add pagination
     getUserPlaylists(token, 10)
     .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
     .then(data => setPlaylists(data?.items || []))
