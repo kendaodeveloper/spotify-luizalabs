@@ -8,10 +8,10 @@ import Layout from './components/Layout';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Callback from './pages/Callback';
-import Artistas from './pages/Artistas';
-import ArtistaDetalhes from './pages/ArtistaDetalhes';
+import Artists from './pages/Artists';
+import ArtistAlbums from './pages/ArtistAlbums';
 import Playlists from './pages/Playlists';
-import Perfil from './pages/Perfil';
+import Profile from './pages/Profile';
 
 function App() {
   useEffect(() => {
@@ -29,10 +29,10 @@ function App() {
 
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
-            <Route path="/artistas" element={<Artistas />} />
-            <Route path="/artistas/:artistId" element={<ArtistaDetalhes />} />
+            <Route path="/artists" element={<Artists />} />
+            <Route path="/artists/:artistId" element={<ArtistAlbums />} />
             <Route path="/playlists" element={<Playlists />} />
-            <Route path="/perfil" element={<Perfil />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
         </Routes>
       </AuthProvider>

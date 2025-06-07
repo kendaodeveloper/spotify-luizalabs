@@ -4,29 +4,29 @@ import { useAuth } from '../context/AuthContext';
 import Card from '../components/Card';
 import { getTopArtists } from '../api/Spotify';
 
-const Artistas = () => {
-  const { token } = useAuth();
+const Artists = () => {
+  const { token, logout } = useAuth();
   const [artists, setArtists] = useState([]);
 
   useEffect(() => {
     if (!token) return;
 
     getTopArtists(token, 10)
-    .then(res => res.json())
-    .then(data => setArtists(data.items || []))
+    .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
+    .then(data => setArtists(data?.items || []))
     .catch(err => console.error("Error fetching top artists:", err));
-  }, [token]);
+  }, [token, logout]);
 
-  if (!artists.length) {
-    return <div>Carregando seus artistas favoritos...</div>;
+  if (!artists || !artists.length) {
+    return <div>Carregando artistas...</div>;
   }
 
   return (
     <section>
-      <h2>Seus artistas mais ouvidos</h2>
+      <h2>Seus Artistas</h2>
       <div className="grid-container">
         {artists.map(artist => (
-          <Link key={artist.id} to={`/artistas/${artist.id}`} state={{ artistName: artist.name }}>
+          <Link key={artist.id} to={`/artists/${artist.id}`} state={{ artistName: artist.name }}>
             <Card
               image={artist.images[0]?.url}
               name={artist.name}
@@ -38,4 +38,4 @@ const Artistas = () => {
   );
 };
 
-export default Artistas;
+export default Artists;

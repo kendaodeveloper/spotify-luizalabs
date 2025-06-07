@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { getUserProfile, getUserPlaylists, createPlaylist } from '../api/Spotify';
 
 const Playlists = () => {
-  const { token } = useAuth();
+  const { token, logout } = useAuth();
   const [playlists, setPlaylists] = useState([]);
   const [user, setUser] = useState(null);
 
@@ -11,19 +11,19 @@ const Playlists = () => {
     if (!token) return;
 
     getUserProfile(token)
-    .then(res => res.json())
+    .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
     .then(data => setUser(data))
     .catch(err => console.error("Error fetching user:", err));
-  }, [token]);
+  }, [token, logout]);
 
   const fetchPlaylists = useCallback(() => {
     if (!token) return;
 
     getUserPlaylists(token, 10)
-    .then(res => res.json())
-    .then(data => setPlaylists(data.items || []))
+    .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
+    .then(data => setPlaylists(data?.items || []))
     .catch(err => console.error("Error fetching playlists:", err));
-  }, [token]);
+  }, [token, logout]);
 
   useEffect(() => {
     fetchPlaylists();
@@ -31,16 +31,16 @@ const Playlists = () => {
 
   const createNewPlaylist = () => {
     if (!user?.id) {
-        alert("ID do usuário não encontrado. Não é possível criar a playlist.");
+        console.error("Unable to create playlist: Invalid user id.");
         return;
     }
 
-    const playlistName = prompt("Qual será o nome da sua nova playlist?");
+    const playlistName = prompt("Qual será o nome da sua playlist?");
     if (!playlistName) return;
 
     createPlaylist(token, user.id, playlistName)
     .then(res => {
-        if (!res.ok) throw new Error('Falha ao criar a playlist');
+        if (!res.ok) throw new Error('Failed creating playlist');
         return res.json();
     })
     .then(() => {
@@ -49,6 +49,10 @@ const Playlists = () => {
     })
     .catch(err => console.error("Error creating playlist:", err));
   };
+
+  if (!user || !playlists || !playlists.length) {
+    return <div>Carregando playlists...</div>;
+  }
 
   return (
     <section>

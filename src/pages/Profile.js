@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getUserProfile } from '../api/Spotify';
 
-const Perfil = () => {
+const Profile = () => {
   const { token, logout } = useAuth();
   const [user, setUser] = useState(null);
 
@@ -10,10 +10,10 @@ const Perfil = () => {
     if (!token) return;
 
     getUserProfile(token)
-    .then(res => res.json())
+    .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
     .then(data => setUser(data))
     .catch(err => console.error("Error fetching user profile:", err));
-  }, [token]);
+  }, [token, logout]);
 
   if (!user) {
     return <div>Carregando perfil...</div>;
@@ -33,10 +33,10 @@ const Perfil = () => {
       </div>
 
       <button onClick={logout} className="logout-button">
-        Sair (Logout)
+        Logout
       </button>
     </section>
   );
 };
 
-export default Perfil;
+export default Profile;

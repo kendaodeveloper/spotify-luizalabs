@@ -4,8 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import Card from '../components/Card';
 import { getArtistAlbums } from '../api/Spotify';
 
-const ArtistaDetalhes = () => {
-  const { token } = useAuth();
+const ArtistAlbums = () => {
+  const { token, logout } = useAuth();
   const { artistId } = useParams();
   const location = useLocation();
   const artistName = location.state?.artistName || 'Artista';
@@ -16,14 +16,18 @@ const ArtistaDetalhes = () => {
     if (!token || !artistId) return;
 
     getArtistAlbums(token, artistId, 20)
-    .then(res => res.json())
-    .then(data => setAlbums(data.items || []))
+    .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
+    .then(data => setAlbums(data?.items || []))
     .catch(err => console.error(`Error fetching albums for ${artistName}:`, err));
-  }, [token, artistId, artistName]);
+  }, [token, logout, artistId, artistName]);
+
+  if (!albums || !albums.length) {
+    return <div>Carregando álbuns...</div>;
+  }
 
   return (
     <section>
-      <Link to="/artistas" className="logout-button" style={{marginBottom: '20px', textDecoration: 'none'}}>
+      <Link to="/artists" className="logout-button" style={{marginBottom: '20px', textDecoration: 'none'}}>
         ← Voltar para Artistas
       </Link>
       <h2 style={{marginTop: '20px'}}>Álbuns de {artistName}</h2>
@@ -40,4 +44,4 @@ const ArtistaDetalhes = () => {
   );
 };
 
-export default ArtistaDetalhes;
+export default ArtistAlbums;

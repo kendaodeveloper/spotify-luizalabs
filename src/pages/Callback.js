@@ -33,7 +33,7 @@ const Callback = () => {
       })
       .then(res => {
         if (!res.ok) {
-          throw new Error('Failed to get token');
+          throw new Error('Failed getting token');
         }
         return res.json();
       })
