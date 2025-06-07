@@ -6,14 +6,15 @@ const Playlists = () => {
   const { token, logout } = useAuth();
   const [playlists, setPlaylists] = useState([]);
   const [user, setUser] = useState(null);
+  const [showDialog, setShowDialog] = useState(false);
+  const [newPlaylistName, setNewPlaylistName] = useState('');
 
   useEffect(() => {
     if (!token) return;
-
     getUserProfile(token)
-    .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
-    .then(data => setUser(data))
-    .catch(err => console.error("Error fetching user:", err));
+      .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
+      .then(data => setUser(data))
+      .catch(err => console.error("Error fetching user:", err));
   }, [token, logout]);
 
   const fetchPlaylists = useCallback(() => {
@@ -21,34 +22,28 @@ const Playlists = () => {
 
     // TODO: Add pagination
     getUserPlaylists(token, 10)
-    .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
-    .then(data => setPlaylists(data?.items || []))
-    .catch(err => console.error("Error fetching playlists:", err));
+      .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
+      .then(data => setPlaylists(data?.items || []))
+      .catch(err => console.error("Error fetching playlists:", err));
   }, [token, logout]);
 
   useEffect(() => {
     fetchPlaylists();
   }, [fetchPlaylists]);
 
-  const createNewPlaylist = () => {
-    if (!user?.id) {
-        console.error("Unable to create playlist: Invalid user id.");
-        return;
-    }
-
-    const playlistName = prompt("Qual será o nome da sua playlist?");
-    if (!playlistName) return;
-
-    createPlaylist(token, user.id, playlistName)
-    .then(res => {
+  const handleCreatePlaylist = () => {
+    if (!user?.id || !newPlaylistName.trim()) return;
+    createPlaylist(token, user.id, newPlaylistName)
+      .then(res => {
         if (!res.ok) throw new Error('Failed creating playlist');
         return res.json();
-    })
-    .then(() => {
-        alert('Playlist criada com sucesso!');
+      })
+      .then(() => {
         fetchPlaylists();
-    })
-    .catch(err => console.error("Error creating playlist:", err));
+        setShowDialog(false);
+        setNewPlaylistName('');
+      })
+      .catch(err => console.error("Error creating playlist:", err));
   };
 
   if (!user || !playlists || !playlists.length) {
@@ -57,26 +52,48 @@ const Playlists = () => {
 
   return (
     <section>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h2>Suas Playlists</h2>
-        <button onClick={createNewPlaylist} className="login-button">
-          + Criar Playlist
+      <div className="artist-header">
+        <div>
+          <h2 className="section-title">Minhas Playlists</h2>
+          <p className="section-subtitle">Sua coleção pessoal de playlists</p>
+        </div>
+        <button className="login-button" onClick={() => setShowDialog(true)}>
+          Criar Playlist
         </button>
       </div>
-      <div className="grid-container" style={{marginTop: '20px'}}>
+
+      <div className="single-column">
         {playlists.map(playlist => (
-          <div className="card" key={playlist.id}>
-            {(playlist.images && playlist.images[0]) ?
-              <img src={playlist.images[0].url} alt={playlist.name} /> :
-              <div style={{height: 180, backgroundColor: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center', borderRadius: '4px'}}>🎵</div>
-            }
-            <div className="card-content">
-              <h4>{playlist.name}</h4>
+          <div className="artist-card" key={playlist.id}>
+            {playlist.images?.[0]?.url ? (
+              <img src={playlist.images[0].url} alt={playlist.name} className="artist-round-image" />
+            ) : (
+              <div className="artist-round-image" style={{ backgroundColor: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🎵</div>
+            )}
+            <div>
+              <h4 className="artist-name">{playlist.name}</h4>
               <p>{playlist.tracks.total} músicas</p>
             </div>
           </div>
         ))}
       </div>
+
+      {showDialog && (
+        <div className="dialog-overlay">
+          <div className="dialog">
+            <button className="dialog-close" onClick={() => setShowDialog(false)}>×</button>
+            <label className="dialog-label">Dê um nome à sua playlist</label>
+            <input
+              type="text"
+              value={newPlaylistName}
+              onChange={(e) => setNewPlaylistName(e.target.value)}
+              className="dialog-input"
+              placeholder="Nome da playlist"
+            />
+            <button onClick={handleCreatePlaylist} className="login-button">Criar</button>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

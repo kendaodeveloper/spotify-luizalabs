@@ -356,3 +356,68 @@ section h2 {
   font-size: 14px;
   color: #b3b3b3;
 }
+
+/* --- Dialogs --- */
+
+.dialog-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.dialog {
+  background-color: #181818;
+  padding: 32px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  height: 300px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dialog-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.dialog-label {
+  font-size: 18px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.dialog-input {
+  width: 100%;
+  padding: 10px 0;
+  font-size: 16px;
+  margin-bottom: 20px;
+  border: none;
+  border-bottom: 2px solid #b3b3b3;
+  background-color: transparent;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.3s;
+}
+
+.dialog-input:focus {
+  border-bottom-color: #1DB954;
+}
