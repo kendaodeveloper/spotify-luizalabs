@@ -10,9 +10,15 @@ const Profile = () => {
     if (!token) return;
 
     getUserProfile(token)
-    .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
-    .then(data => setUser(data))
-    .catch(err => console.error("Error fetching user profile:", err));
+      .then(res => {
+        if (res.status === 401) {
+          logout();
+          return null;
+        }
+        return res.json();
+      })
+      .then(data => setUser(data))
+      .catch(err => console.error("Error fetching user profile:", err));
   }, [token, logout]);
 
   if (!user) {
@@ -20,20 +26,21 @@ const Profile = () => {
   }
 
   return (
-    <section>
-      <div style={{ display: 'flex', alignItems: 'center', gap: '20px', marginBottom: '40px' }}>
-        {user.images?.[0]?.url && (
-          <img src={user.images[0].url} alt={user.display_name} style={{ width: 150, height: 150, borderRadius: '50%' }} />
-        )}
-        <div>
-          <h2 style={{ margin: 0 }}>{user.display_name}</h2>
-          <p style={{ color: '#b3b3b3' }}>{user.email}</p>
-          <p style={{ color: '#b3b3b3' }}>{user.followers.total} seguidores</p>
+    <section className="profile-section">
+      {user.images?.[0]?.url ? (
+        <img
+          src={user.images[0].url}
+          alt={user.display_name}
+          className="profile-image"
+        />
+      ) : (
+        <div className="profile-placeholder">
+          {user.display_name?.[0]?.toUpperCase() ?? "?"}
         </div>
-      </div>
-
+      )}
+      <h2 className="profile-name">{user.display_name}</h2>
       <button onClick={logout} className="logout-button">
-        Logout
+        Sair
       </button>
     </section>
   );

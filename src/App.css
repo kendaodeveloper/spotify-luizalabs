@@ -115,27 +115,63 @@ body {
   overflow-y: auto;
 }
 
-.profile-container {
+/** Profile **/
+
+.profile-section {
   display: flex;
-  justify-content: space-between;
+  flex-direction: column;
   align-items: center;
-  margin-bottom: 30px;
+  justify-content: center;
+  text-align: center;
+  height: 100vh;
+  gap: 20px;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 10px #1DB954;
+}
+
+.profile-placeholder {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #1DB954;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #121212;
+  font-size: 64px;
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 .logout-button {
-  background-color: #333;
-  color: #fff;
+  background-color: #1DB954;
+  color: #121212;
   border: none;
-  padding: 10px 20px;
+  padding: 15px 60px;
   border-radius: 50px;
-  cursor: pointer;
+  font-size: 18px;
   font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 1px;
   transition: all 0.2s ease-in-out;
 }
 
 .logout-button:hover {
-    background-color: #535353;
-    transform: scale(1.05);
+  background-color: #1ed760;
+  transform: scale(1.05);
+}
+
+.profile-name {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
 }
 
 /* --- Grid & Cards --- */
