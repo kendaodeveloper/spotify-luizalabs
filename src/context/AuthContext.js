@@ -7,21 +7,28 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(window.localStorage.getItem('spotify_access_token'));
   const navigate = useNavigate();
 
+  const cleanStorageAndToken = () => {
+    window.localStorage.removeItem('spotify_access_token');
+    window.sessionStorage.removeItem('code_verifier');
+    setToken(null);
+  };
+
   const login = (newToken) => {
+    cleanStorageAndToken();
+
     window.localStorage.setItem('spotify_access_token', newToken);
-    window.sessionStorage.removeItem('code_verifier'); 
     setToken(newToken);
+
     navigate('/');
   };
 
   const logout = () => {
-    window.localStorage.removeItem('spotify_access_token');
-    window.sessionStorage.removeItem('code_verifier');
-    setToken(null);
+    cleanStorageAndToken();
+
     navigate('/login');
   };
 
-  const value = { token, login, logout };
+  const value = { token, login, logout, cleanStorageAndToken };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

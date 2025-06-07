@@ -1,12 +1,19 @@
-import { ReactComponent as SpotifyIcon } from './../assets/spotify.svg';
+import SpotifyImage from './../assets/spotify.png';
 import { generateRandomString, generateCodeChallenge } from './../utils/Pkce';
+import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
+  const { cleanStorageAndToken } = useAuth();
+
   const handleLogin = async () => {
+    cleanStorageAndToken();
+
     // Make sure your URI is correctly set in your .env file and Spotify Developer Dashboard
 
     const clientId = process.env.REACT_APP_CLIENT_ID;
     const redirectUri = process.env.REACT_APP_URI + '/callback';
+
+    // Using OAuth 2.0 with PKCE
 
     const codeVerifier = generateRandomString(128);
     window.sessionStorage.setItem('code_verifier', codeVerifier);
@@ -33,8 +40,7 @@ const Login = () => {
 
   return (
     <div className="login-container">
-      <h1>spotify-luizalabs</h1>
-      <SpotifyIcon className="spotify-icon" />
+      <img src={SpotifyImage} alt="Spotify" className="spotify-icon" />
       <h4>Entre com sua conta Spotify clicando no botão abaixo</h4>
       <button onClick={handleLogin} className="login-button">
         Entrar

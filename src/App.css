@@ -26,16 +26,15 @@ body {
 
 .login-button {
   background-color: #1DB954;
-  color: #fff;
+  color: #121212;
   border: none;
   padding: 15px 60px;
   border-radius: 50px;
   font-size: 18px;
   font-weight: bold;
   cursor: pointer;
-  text-transform: uppercase;
   letter-spacing: 1px;
-  margin-top: 30px;
+  margin: 10px 0;
   transition: all 0.2s ease-in-out;
 }
 
@@ -45,9 +44,15 @@ body {
 }
 
 .spotify-icon {
-  width: 256px;
-  height: 256px;
-  margin: 20px 0;
+  width: 250px;
+  height: 75px;
+  margin: 10px 0;
+}
+
+.spotify-sidebar {
+  width: 167px;
+  height: 50px;
+  margin: 10px 0;
 }
 
 /* --- Home Layout --- */
@@ -57,16 +62,17 @@ body {
 }
 
 .sidebar {
-  width: 240px;
+  width: 200px;
   background-color: #040404;
-  padding: 24px;
+  padding-left: 25px;
   display: flex;
   flex-direction: column;
 }
 
 .sidebar nav a {
-  display: block;
-  padding: 12px 0;
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
   color: #b3b3b3;
   font-weight: bold;
   text-decoration: none;
