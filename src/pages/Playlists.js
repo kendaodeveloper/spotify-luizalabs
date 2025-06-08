@@ -2,6 +2,8 @@ import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getUserProfile, getUserPlaylists, createPlaylist } from '../api/Spotify';
 import Loading from '../components/Loading';
+import Button from '../components/Button';
+import Modal from '../components/Modal';
 
 const Playlists = () => {
   const { token, logout } = useAuth();
@@ -62,9 +64,9 @@ const Playlists = () => {
           <h2 className="section-title">Minhas Playlists</h2>
           <p className="section-subtitle">Sua coleção pessoal de playlists</p>
         </div>
-        <button className="login-button" onClick={() => setShowDialog(true)}>
+        <Button onClick={() => setShowDialog(true)}>
           Criar Playlist
-        </button>
+        </Button>
       </div>
 
       <div className="single-column">
@@ -83,22 +85,17 @@ const Playlists = () => {
         ))}
       </div>
 
-      {showDialog && (
-        <div className="dialog-overlay">
-          <div className="dialog">
-            <button className="dialog-close" onClick={() => setShowDialog(false)}>×</button>
-            <label className="dialog-label">Dê um nome à sua playlist</label>
-            <input
-              type="text"
-              value={newPlaylistName}
-              onChange={(e) => setNewPlaylistName(e.target.value)}
-              className="dialog-input"
-              placeholder="Nome da playlist"
-            />
-            <button onClick={handleCreatePlaylist} className="login-button">Criar</button>
-          </div>
-        </div>
-      )}
+      <Modal isOpen={showDialog} onClose={() => setShowDialog(false)}>
+        <label className="dialog-label">Dê um nome à sua playlist:</label>
+        <input
+          type="text"
+          value={newPlaylistName}
+          onChange={(e) => setNewPlaylistName(e.target.value)}
+          className="dialog-input"
+          placeholder="Nome da playlist"
+        />
+        <Button onClick={handleCreatePlaylist}>Criar</Button>
+      </Modal>
     </section>
   );
 };

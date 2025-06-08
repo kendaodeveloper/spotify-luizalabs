@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAuth } from './../context/AuthContext';
+import Loading from '../components/Loading';
 
 const Callback = () => {
   const [searchParams] = useSearchParams();
@@ -60,7 +61,7 @@ const Callback = () => {
     }
   }, [searchParams, token, login, logout]);
 
-  return <div>Autenticando e redirecionando...</div>;
+  return <Loading message="Autenticando e redirecionando..." />;
 };
 
 export default Callback;

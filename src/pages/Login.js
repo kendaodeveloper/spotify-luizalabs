@@ -1,6 +1,7 @@
 import SpotifyImage from './../assets/spotify.png';
 import { generateRandomString, generateCodeChallenge } from './../utils/Pkce';
 import { useAuth } from '../context/AuthContext';
+import Button from '../components/Button';
 
 const Login = () => {
   const { cleanStorageAndToken } = useAuth();
@@ -42,9 +43,9 @@ const Login = () => {
     <div className="login-container">
       <img src={SpotifyImage} alt="Spotify" className="spotify-icon" />
       <h4>Entre com sua conta Spotify clicando no botão abaixo</h4>
-      <button onClick={handleLogin} className="login-button">
+      <Button onClick={handleLogin}>
         Entrar
-      </button>
+      </Button>
     </div>
   );
 };

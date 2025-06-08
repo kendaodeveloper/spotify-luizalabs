@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getUserProfile } from '../api/Spotify';
 import Loading from '../components/Loading';
+import Button from '../components/Button';
 
 const Profile = () => {
   const { token, logout } = useAuth();
@@ -40,9 +41,9 @@ const Profile = () => {
         </div>
       )}
       <h2 className="profile-name">{user.display_name}</h2>
-      <button onClick={logout} className="logout-button">
+      <Button onClick={logout}>
         Sair
-      </button>
+      </Button>
     </section>
   );
 };
