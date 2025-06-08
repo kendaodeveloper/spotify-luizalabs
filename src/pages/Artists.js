@@ -6,7 +6,7 @@ import Loading from '../components/Loading';
 
 const Artists = () => {
   const { token, logout } = useAuth();
-  const [artists, setArtists] = useState([]);
+  const [artists, setArtists] = useState(null);
 
   useEffect(() => {
     if (!token) return;
@@ -23,7 +23,7 @@ const Artists = () => {
   }
 
   if (artists.length === 0) {
-    return <div>Nenhum artista encontrado</div>;
+    return <div>Nenhum artista encontrado.</div>;
   }
 
   return (

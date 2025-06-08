@@ -5,7 +5,7 @@ import Loading from '../components/Loading';
 
 const Playlists = () => {
   const { token, logout } = useAuth();
-  const [playlists, setPlaylists] = useState([]);
+  const [playlists, setPlaylists] = useState(null);
   const [user, setUser] = useState(null);
   const [showDialog, setShowDialog] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState('');
@@ -52,7 +52,7 @@ const Playlists = () => {
   }
 
   if (playlists.length === 0) {
-    return <div>Nenhuma playlist encontrada</div>;
+    return <div>Nenhuma playlist encontrada.</div>;
   }
 
   return (

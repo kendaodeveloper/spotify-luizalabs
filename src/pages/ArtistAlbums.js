@@ -12,7 +12,7 @@ const ArtistAlbums = () => {
   const artistName = location.state?.artistName || 'Artista';
   const artistImage = location.state?.artistImage;
 
-  const [albums, setAlbums] = useState([]);
+  const [albums, setAlbums] = useState(null);
 
   useEffect(() => {
     if (!token || !artistId) return;
@@ -29,7 +29,7 @@ const ArtistAlbums = () => {
   }
 
   if (albums.length === 0) {
-    return <div>Nenhum álbum encontrado para este artista</div>;
+    return <div>Nenhum álbum encontrado para este artista.</div>;
   }
 
   return (
