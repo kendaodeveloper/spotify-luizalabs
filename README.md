@@ -24,6 +24,11 @@ Before running the app, you need to register it on the Spotify Developer Dashboa
 
 In the project directory, you can run:
 
+### `npm install`
+
+Before running any scripts, install the project dependencies.\
+This command downloads and installs all required packages listed in package.json.
+
 ### `npm start`
 
 Runs the app in the development mode.\
@@ -51,7 +56,7 @@ The deployment section has moved here: [https://facebook.github.io/create-react-
 
 ### `npm run lint`
 
-Runs ESLint to analyze all .js and .jsx files in the project for code style errors and potential issues.
+Runs ESLint to analyze all files in the project for code style errors and potential issues.
 
 It's useful for checking code quality before committing to the repository.
 

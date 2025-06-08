@@ -1,8 +1,8 @@
 import { NavLink } from 'react-router-dom';
-import { FaHome, FaUser, FaPlay, FaCompactDisc } from 'react-icons/fa';
-import SpotifyImage from '../assets/spotify.png';
+import { Home, DiscAlbum, Play, User } from 'lucide-react';
+import SpotifyImage from './../assets/spotify.png';
 
-const Sidebar = () => {
+const Sidebar: React.FC = () => {
   const iconSize = 25;
 
   return (
@@ -16,25 +16,25 @@ const Sidebar = () => {
           />
           <li>
             <NavLink to="/" end>
-              <FaHome size={iconSize} className="sidebar-icon" />
+              <Home size={iconSize} className="sidebar-icon" />
               Home
             </NavLink>
           </li>
           <li>
             <NavLink to="/artists">
-              <FaCompactDisc size={iconSize} className="sidebar-icon" />
+              <DiscAlbum size={iconSize} className="sidebar-icon" />
               Artistas
             </NavLink>
           </li>
           <li>
             <NavLink to="/playlists">
-              <FaPlay size={iconSize} className="sidebar-icon" />
+              <Play size={iconSize} className="sidebar-icon" />
               Playlists
             </NavLink>
           </li>
           <li>
             <NavLink to="/profile">
-              <FaUser size={iconSize} className="sidebar-icon" />
+              <User size={iconSize} className="sidebar-icon" />
               Perfil
             </NavLink>
           </li>

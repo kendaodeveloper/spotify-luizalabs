@@ -2,8 +2,9 @@ import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Loading from '../components/Loading';
+import { SpotifyTokenResponse } from '../api/Spotify.dto';
 
-const Callback = () => {
+const Callback: React.FC = () => {
   const [searchParams] = useSearchParams();
   const { token, login, logout } = useAuth();
 
@@ -21,7 +22,9 @@ const Callback = () => {
       const redirectUri = `${process.env.REACT_APP_URI}/callback`;
 
       const params = new URLSearchParams();
-      params.append('client_id', clientId);
+      if (clientId) {
+        params.append('client_id', clientId);
+      }
       params.append('grant_type', 'authorization_code');
       params.append('code', code);
       params.append('redirect_uri', redirectUri);
@@ -36,26 +39,21 @@ const Callback = () => {
           if (!res.ok) {
             throw new Error('Failed getting token');
           }
-          return res.json();
+          return res.json() as Promise<SpotifyTokenResponse>;
         })
         .then((data) => {
           if (data.access_token) {
-            console.log('Login with success!');
             login(data.access_token);
           } else {
-            console.warn('Error fetching access_token!');
             logout();
           }
         })
-        .catch((err) => {
-          console.error('Error fetching token:', err);
+        .catch(() => {
           logout();
         });
     } else {
       if (error) {
         console.warn(`Unable to log in: ${error}`);
-      } else {
-        console.warn('Error getting token parameters!');
       }
       logout();
     }

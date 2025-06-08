@@ -1,4 +1,4 @@
-const Home = () => {
+const Home: React.FC = () => {
   return (
     <div className="home-container">
       <h1 className="home-title">Bem-vindo(a)!</h1>

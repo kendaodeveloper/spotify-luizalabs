@@ -2,7 +2,7 @@ import { Outlet, Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from './Sidebar';
 
-const Layout = () => {
+const Layout: React.FC = () => {
   const { token } = useAuth();
 
   if (!token) {

@@ -5,9 +5,13 @@
     "jest": true
   },
   "extends": [
+    "react-app",
     "plugin:react/recommended",
-    "plugin:prettier/recommended"
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended",
+    "plugin:@typescript-eslint/recommended"
   ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
@@ -15,15 +19,11 @@
     "ecmaVersion": "latest",
     "sourceType": "module"
   },
-  "plugins": [
-    "react",
-    "prettier"
-  ],
   "rules": {
     "prettier/prettier": "error",
     "react/jsx-filename-extension": [
       "warn",
-      { "extensions": [".js", ".jsx"] }
+      { "extensions": [".js", ".jsx", ".ts", ".tsx"] }
     ],
     "react/react-in-jsx-scope": "off",
     "import/prefer-default-export": "off",
@@ -34,9 +34,16 @@
         "unnamedComponents": "arrow-function"
       }
     ],
-    "no-unused-vars": "warn",
+    "no-unused-vars": "off",
     "no-console": "off",
-    "react/prop-types": "off"
+    "react/prop-types": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "warn",
+      {
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_"
+      }
+    ]
   },
   "settings": {
     "react": {

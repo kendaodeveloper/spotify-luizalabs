@@ -1,4 +1,4 @@
-import SpotifyImage from '../assets/spotify.png';
+import SpotifyImage from './../assets/spotify.png';
 import {
   generateRandomString,
   generateCodeChallenge,
@@ -6,28 +6,27 @@ import {
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
 
-const Login = () => {
+const Login: React.FC = () => {
   const { cleanStorageAndToken } = useAuth();
 
   const handleLogin = async () => {
     cleanStorageAndToken();
 
-    // Make sure your URI is correctly set in your .env file and Spotify Developer Dashboard
-
     const clientId = process.env.REACT_APP_CLIENT_ID;
     const redirectUri = `${process.env.REACT_APP_URI}/callback`;
 
-    // Using OAuth 2.0 with PKCE
+    if (!clientId || !redirectUri) {
+      console.error(
+        'Client ID or Redirect URI not configured in .env file',
+      );
+      return;
+    }
 
     const codeVerifier = generateRandomString(128);
     window.sessionStorage.setItem('code_verifier', codeVerifier);
-
     const codeChallenge = await generateCodeChallenge(codeVerifier);
-
-    // Setting permissions
     const scope =
       'user-read-private user-read-email user-top-read playlist-read-private playlist-modify-public playlist-modify-private';
-
     const authUrl = new URL('https://accounts.spotify.com/authorize');
 
     const params = {

@@ -10,13 +10,14 @@ import Button from '../components/Button';
 import Modal from '../components/Modal';
 import SectionHeader from '../components/SectionHeader';
 import Card from '../components/Card';
+import { Playlist, SpotifyUser } from '../api/Spotify.dto';
 
-const Playlists = () => {
+const Playlists: React.FC = () => {
   const { token, logout } = useAuth();
-  const [playlists, setPlaylists] = useState(null);
-  const [user, setUser] = useState(null);
-  const [showDialog, setShowDialog] = useState(false);
-  const [newPlaylistName, setNewPlaylistName] = useState('');
+  const [playlists, setPlaylists] = useState<Playlist[] | null>(null);
+  const [user, setUser] = useState<SpotifyUser | null>(null);
+  const [showDialog, setShowDialog] = useState<boolean>(false);
+  const [newPlaylistName, setNewPlaylistName] = useState<string>('');
 
   useEffect(() => {
     if (!token) return;
@@ -35,7 +36,6 @@ const Playlists = () => {
   const fetchPlaylists = useCallback(() => {
     if (!token) return;
 
-    // TODO: Add pagination
     getUserPlaylists(token, 10)
       .then((res) => {
         if (res.status === 401 || res.status === 403) {
@@ -53,7 +53,7 @@ const Playlists = () => {
   }, [fetchPlaylists]);
 
   const handleCreatePlaylist = () => {
-    if (!user?.id || !newPlaylistName.trim()) return;
+    if (!token || !user?.id || !newPlaylistName.trim()) return;
     createPlaylist(token, user.id, newPlaylistName)
       .then((res) => {
         if (!res.ok) throw new Error('Failed creating playlist');
@@ -71,10 +71,6 @@ const Playlists = () => {
     return <Loading message="Carregando playlists..." />;
   }
 
-  if (playlists.length === 0) {
-    return <div>Nenhuma playlist encontrada.</div>;
-  }
-
   return (
     <section>
       <div className="artist-header">
@@ -84,7 +80,6 @@ const Playlists = () => {
         />
         <Button onClick={() => setShowDialog(true)}>Criar Playlist</Button>
       </div>
-
       <div className="card-container">
         {playlists.map((playlist) => (
           <Card
@@ -96,13 +91,14 @@ const Playlists = () => {
           />
         ))}
       </div>
-
       <Modal isOpen={showDialog} onClose={() => setShowDialog(false)}>
         <label className="dialog-label">Dê um nome à sua playlist:</label>
         <input
           type="text"
           value={newPlaylistName}
-          onChange={(e) => setNewPlaylistName(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setNewPlaylistName(e.target.value)
+          }
           className="dialog-input"
           placeholder="Nome da playlist"
         />

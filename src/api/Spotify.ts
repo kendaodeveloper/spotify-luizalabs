@@ -1,25 +1,39 @@
 const BASE_API_URL = 'https://api.spotify.com/v1';
 
-async function fetchWebApi(endpoint, method, token, body) {
+type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
+
+async function fetchWebApi(
+  endpoint: string,
+  method: HttpMethod,
+  token: string,
+  body?: Record<string, unknown>,
+): Promise<Response> {
   return fetch(`${BASE_API_URL}/${endpoint}`, {
     headers: {
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
     },
     method,
-    body: JSON.stringify(body),
+    body: body ? JSON.stringify(body) : undefined,
   });
 }
 
-export async function getUserProfile(token) {
+export async function getUserProfile(token: string): Promise<Response> {
   return fetchWebApi('me', 'GET', token);
 }
 
-export async function getTopArtists(token, limit) {
+export async function getTopArtists(
+  token: string,
+  limit: number,
+): Promise<Response> {
   return fetchWebApi(`me/top/artists?limit=${limit}`, 'GET', token);
 }
 
-export async function getArtistAlbums(token, artistId, limit) {
+export async function getArtistAlbums(
+  token: string,
+  artistId: string,
+  limit: number,
+): Promise<Response> {
   return fetchWebApi(
     `artists/${artistId}/albums?include_groups=album,single&limit=${limit}`,
     'GET',
@@ -27,11 +41,18 @@ export async function getArtistAlbums(token, artistId, limit) {
   );
 }
 
-export async function getUserPlaylists(token, limit) {
+export async function getUserPlaylists(
+  token: string,
+  limit: number,
+): Promise<Response> {
   return fetchWebApi(`me/playlists?limit=${limit}`, 'GET', token);
 }
 
-export async function createPlaylist(token, userId, playlistName) {
+export async function createPlaylist(
+  token: string,
+  userId: string,
+  playlistName: string,
+): Promise<Response> {
   const body = {
     name: playlistName,
     description: `Playlist criada via spotify-luizalabs em ${new Date().toLocaleDateString()}`,

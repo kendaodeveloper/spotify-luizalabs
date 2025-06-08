@@ -5,15 +5,15 @@ import { getTopArtists } from '../api/Spotify';
 import Loading from '../components/Loading';
 import SectionHeader from '../components/SectionHeader';
 import Card from '../components/Card';
+import { Artist } from '../api/Spotify.dto';
 
-const Artists = () => {
+const Artists: React.FC = () => {
   const { token, logout } = useAuth();
-  const [artists, setArtists] = useState(null);
+  const [artists, setArtists] = useState<Artist[] | null>(null);
 
   useEffect(() => {
     if (!token) return;
 
-    // TODO: Add pagination
     getTopArtists(token, 10)
       .then((res) => {
         if (res.status === 401 || res.status === 403) {

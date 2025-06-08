@@ -1,4 +1,16 @@
-const Card = ({ image, title, subtitle, shape = 'square' }) => {
+interface CardProps {
+  image?: string;
+  title: string;
+  subtitle?: string;
+  shape?: 'square' | 'round';
+}
+
+const Card: React.FC<CardProps> = ({
+  image,
+  title,
+  subtitle,
+  shape = 'square',
+}) => {
   return (
     <div className={`card card-${shape}`}>
       {image ? (

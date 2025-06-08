@@ -1,24 +1,31 @@
 import { useState, useEffect } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
-import { FaArrowLeft } from 'react-icons/fa';
+import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { getArtistAlbums } from '../api/Spotify';
 import Loading from '../components/Loading';
 import Card from '../components/Card';
+import { Album } from '../api/Spotify.dto';
 
-const ArtistAlbums = () => {
+interface ArtistLocationState {
+  artistName: string;
+  artistImage: string;
+}
+
+const ArtistAlbums: React.FC = () => {
   const { token, logout } = useAuth();
-  const { artistId } = useParams();
+  const { artistId } = useParams<{ artistId: string }>();
   const location = useLocation();
-  const artistName = location.state?.artistName || 'Artista';
-  const artistImage = location.state?.artistImage;
+  const state = location.state as ArtistLocationState;
 
-  const [albums, setAlbums] = useState(null);
+  const artistName = state?.artistName || 'Artista';
+  const artistImage = state?.artistImage;
+
+  const [albums, setAlbums] = useState<Album[] | null>(null);
 
   useEffect(() => {
     if (!token || !artistId) return;
 
-    // TODO: Add pagination
     getArtistAlbums(token, artistId, 20)
       .then((res) => {
         if (res.status === 401 || res.status === 403) {
@@ -46,11 +53,10 @@ const ArtistAlbums = () => {
       <div className="artist-header">
         <div className="artist-info">
           <Link to="/artists" className="artist-back-link">
-            <FaArrowLeft className="artist-back-icon" />
+            <ArrowLeft className="artist-back-icon" />
             <span className="artist-name">{artistName}</span>
           </Link>
         </div>
-
         {artistImage && (
           <img
             src={artistImage}
@@ -59,7 +65,6 @@ const ArtistAlbums = () => {
           />
         )}
       </div>
-
       <div className="card-container">
         {albums.map((album) => (
           <Card
