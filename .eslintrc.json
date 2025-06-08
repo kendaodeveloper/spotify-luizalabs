@@ -37,5 +37,10 @@
     "no-unused-vars": "warn",
     "no-console": "off",
     "react/prop-types": "off"
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   }
 }

@@ -4,6 +4,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { getArtistAlbums } from '../api/Spotify';
 import Loading from '../components/Loading';
+import Card from '../components/Card';
 
 const ArtistAlbums = () => {
   const { token, logout } = useAuth();
@@ -33,7 +34,7 @@ const ArtistAlbums = () => {
   }, [token, logout, artistId, artistName]);
 
   if (!albums) {
-    return <Loading message="Carregando álbums..." />;
+    return <Loading message="Carregando álbuns..." />;
   }
 
   if (albums.length === 0) {
@@ -59,19 +60,15 @@ const ArtistAlbums = () => {
         )}
       </div>
 
-      <div className="single-column">
+      <div className="card-container">
         {albums.map((album) => (
-          <div key={album.id} className="album-card">
-            <img
-              src={album.images[0]?.url}
-              alt={album.name}
-              className="album-image"
-            />
-            <div className="album-info">
-              <h4>{album.name}</h4>
-              <p>{album.release_date}</p>
-            </div>
-          </div>
+          <Card
+            key={album.id}
+            shape="square"
+            image={album.images[0]?.url}
+            title={album.name}
+            subtitle={album.release_date}
+          />
         ))}
       </div>
     </section>

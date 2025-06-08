@@ -9,40 +9,32 @@ const Sidebar = () => {
     <aside className="sidebar">
       <nav>
         <ul>
-          <img src={SpotifyImage} alt="Spotify" className="spotify-sidebar" />
+          <img
+            src={SpotifyImage}
+            alt="Spotify"
+            className="spotify-sidebar"
+          />
           <li>
             <NavLink to="/" end>
-              <FaHome
-                size={iconSize}
-                style={{ marginLeft: '10px', marginRight: '20px' }}
-              />
+              <FaHome size={iconSize} className="sidebar-icon" />
               Home
             </NavLink>
           </li>
           <li>
             <NavLink to="/artists">
-              <FaCompactDisc
-                size={iconSize}
-                style={{ marginLeft: '10px', marginRight: '20px' }}
-              />
+              <FaCompactDisc size={iconSize} className="sidebar-icon" />
               Artistas
             </NavLink>
           </li>
           <li>
             <NavLink to="/playlists">
-              <FaPlay
-                size={iconSize}
-                style={{ marginLeft: '10px', marginRight: '20px' }}
-              />
+              <FaPlay size={iconSize} className="sidebar-icon" />
               Playlists
             </NavLink>
           </li>
           <li>
             <NavLink to="/profile">
-              <FaUser
-                size={iconSize}
-                style={{ marginLeft: '10px', marginRight: '20px' }}
-              />
+              <FaUser size={iconSize} className="sidebar-icon" />
               Perfil
             </NavLink>
           </li>

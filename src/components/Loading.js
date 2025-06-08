@@ -1,14 +1,7 @@
 import { FaSpinner } from 'react-icons/fa';
 
 const Loading = ({ message = 'Carregando...' }) => (
-  <div
-    style={{
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center',
-      marginTop: '2rem',
-    }}
-  >
+  <div className="loading-container">
     <FaSpinner className="spinner" size={32} />
     <p>{message}</p>
   </div>

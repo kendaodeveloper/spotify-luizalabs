@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getTopArtists } from '../api/Spotify';
 import Loading from '../components/Loading';
+import SectionHeader from '../components/SectionHeader';
+import Card from '../components/Card';
 
 const Artists = () => {
   const { token, logout } = useAuth();
@@ -34,11 +36,11 @@ const Artists = () => {
 
   return (
     <section>
-      <h1 className="section-title">Top Artistas</h1>
-      <p className="section-subtitle">
-        Aqui você encontra seus artistas preferidos
-      </p>
-      <div className="single-column">
+      <SectionHeader
+        title="Top Artistas"
+        subtitle="Aqui você encontra seus artistas preferidos"
+      />
+      <div className="card-container">
         {artists.map((artist) => (
           <Link
             key={artist.id}
@@ -48,14 +50,11 @@ const Artists = () => {
               artistImage: artist.images[0]?.url,
             }}
           >
-            <div className="artist-card">
-              <img
-                src={artist.images[0]?.url}
-                alt={artist.name}
-                className="artist-round-image"
-              />
-              <span className="artist-name">{artist.name}</span>
-            </div>
+            <Card
+              shape="round"
+              image={artist.images?.[0]?.url}
+              title={artist.name}
+            />
           </Link>
         ))}
       </div>

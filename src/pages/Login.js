@@ -1,5 +1,8 @@
 import SpotifyImage from '../assets/spotify.png';
-import { generateRandomString, generateCodeChallenge } from '../utils/Pkce';
+import {
+  generateRandomString,
+  generateCodeChallenge,
+} from '../utils/Pkce';
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
 

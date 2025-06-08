@@ -8,6 +8,8 @@ import {
 import Loading from '../components/Loading';
 import Button from '../components/Button';
 import Modal from '../components/Modal';
+import SectionHeader from '../components/SectionHeader';
+import Card from '../components/Card';
 
 const Playlists = () => {
   const { token, logout } = useAuth();
@@ -76,40 +78,22 @@ const Playlists = () => {
   return (
     <section>
       <div className="artist-header">
-        <div>
-          <h2 className="section-title">Minhas Playlists</h2>
-          <p className="section-subtitle">Sua coleção pessoal de playlists</p>
-        </div>
+        <SectionHeader
+          title="Minhas Playlists"
+          subtitle="Sua coleção pessoal de playlists"
+        />
         <Button onClick={() => setShowDialog(true)}>Criar Playlist</Button>
       </div>
 
-      <div className="single-column">
+      <div className="card-container">
         {playlists.map((playlist) => (
-          <div className="artist-card" key={playlist.id}>
-            {playlist.images?.[0]?.url ? (
-              <img
-                src={playlist.images[0].url}
-                alt={playlist.name}
-                className="artist-round-image"
-              />
-            ) : (
-              <div
-                className="artist-round-image"
-                style={{
-                  backgroundColor: '#333',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                }}
-              >
-                🎵
-              </div>
-            )}
-            <div>
-              <h4 className="artist-name">{playlist.name}</h4>
-              <p>{playlist.tracks.total} músicas</p>
-            </div>
-          </div>
+          <Card
+            key={playlist.id}
+            shape="square"
+            image={playlist.images?.[0]?.url}
+            title={playlist.name}
+            subtitle={`${playlist.tracks.total} músicas`}
+          />
         ))}
       </div>
 
