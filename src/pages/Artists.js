@@ -13,9 +13,15 @@ const Artists = () => {
 
     // TODO: Add pagination
     getTopArtists(token, 10)
-      .then(res => { if (res.status === 401 || res.status === 403) { logout(); return null; } return res.json(); })
-      .then(data => setArtists(data?.items || []))
-      .catch(err => console.error("Error fetching top artists:", err));
+      .then((res) => {
+        if (res.status === 401 || res.status === 403) {
+          logout();
+          return null;
+        }
+        return res.json();
+      })
+      .then((data) => setArtists(data?.items || []))
+      .catch((err) => console.error('Error fetching top artists:', err));
   }, [token, logout]);
 
   if (!artists) {
@@ -29,12 +35,25 @@ const Artists = () => {
   return (
     <section>
       <h1 className="section-title">Top Artistas</h1>
-      <p className="section-subtitle">Aqui você encontra seus artistas preferidos</p>
+      <p className="section-subtitle">
+        Aqui você encontra seus artistas preferidos
+      </p>
       <div className="single-column">
-        {artists.map(artist => (
-          <Link key={artist.id} to={`/artists/${artist.id}`} state={{ artistName: artist.name, artistImage: artist.images[0]?.url }}>
+        {artists.map((artist) => (
+          <Link
+            key={artist.id}
+            to={`/artists/${artist.id}`}
+            state={{
+              artistName: artist.name,
+              artistImage: artist.images[0]?.url,
+            }}
+          >
             <div className="artist-card">
-              <img src={artist.images[0]?.url} alt={artist.name} className="artist-round-image" />
+              <img
+                src={artist.images[0]?.url}
+                alt={artist.name}
+                className="artist-round-image"
+              />
               <span className="artist-name">{artist.name}</span>
             </div>
           </Link>

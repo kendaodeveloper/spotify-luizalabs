@@ -12,15 +12,15 @@ const Profile = () => {
     if (!token) return;
 
     getUserProfile(token)
-      .then(res => {
+      .then((res) => {
         if (res.status === 401 || res.status === 403) {
           logout();
           return null;
         }
         return res.json();
       })
-      .then(data => setUser(data))
-      .catch(err => console.error("Error fetching user profile:", err));
+      .then((data) => setUser(data))
+      .catch((err) => console.error('Error fetching user profile:', err));
   }, [token, logout]);
 
   if (!user) {
@@ -37,13 +37,11 @@ const Profile = () => {
         />
       ) : (
         <div className="profile-placeholder">
-          {user.display_name?.[0]?.toUpperCase() ?? "?"}
+          {user.display_name?.[0]?.toUpperCase() ?? '?'}
         </div>
       )}
       <h2 className="profile-name">{user.display_name}</h2>
-      <Button onClick={logout}>
-        Sair
-      </Button>
+      <Button onClick={logout}>Sair</Button>
     </section>
   );
 };

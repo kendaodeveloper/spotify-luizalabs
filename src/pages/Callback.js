@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { useAuth } from './../context/AuthContext';
+import { useAuth } from '../context/AuthContext';
 import Loading from '../components/Loading';
 
 const Callback = () => {
@@ -18,7 +18,7 @@ const Callback = () => {
 
     if (code && codeVerifier) {
       const clientId = process.env.REACT_APP_CLIENT_ID;
-      const redirectUri = process.env.REACT_APP_URI + '/callback';
+      const redirectUri = `${process.env.REACT_APP_URI}/callback`;
 
       const params = new URLSearchParams();
       params.append('client_id', clientId);
@@ -32,28 +32,28 @@ const Callback = () => {
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
         body: params,
       })
-      .then(res => {
-        if (!res.ok) {
-          throw new Error('Failed getting token');
-        }
-        return res.json();
-      })
-      .then(data => {
-        if (data.access_token) {
-          console.log('Login with success!');
-          login(data.access_token);
-        } else {
-          console.warn('Error fetching access_token!');
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('Failed getting token');
+          }
+          return res.json();
+        })
+        .then((data) => {
+          if (data.access_token) {
+            console.log('Login with success!');
+            login(data.access_token);
+          } else {
+            console.warn('Error fetching access_token!');
+            logout();
+          }
+        })
+        .catch((err) => {
+          console.error('Error fetching token:', err);
           logout();
-        }
-      })
-      .catch(err => {
-        console.error('Error fetching token:', err);
-        logout();
-      });
+        });
     } else {
       if (error) {
-        console.warn('Unable to log in: ' + error);
+        console.warn(`Unable to log in: ${error}`);
       } else {
         console.warn('Error getting token parameters!');
       }

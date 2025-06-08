@@ -13,7 +13,7 @@ import ArtistAlbums from './pages/ArtistAlbums';
 import Playlists from './pages/Playlists';
 import Profile from './pages/Profile';
 
-function App() {
+const App = () => {
   useEffect(() => {
     if (window.location.hostname === 'localhost') {
       window.location.hostname = '127.0.0.1'; // force not to use localhost
@@ -38,6 +38,6 @@ function App() {
       </AuthProvider>
     </BrowserRouter>
   );
-}
+};
 
 export default App;

@@ -4,7 +4,9 @@ import { useNavigate } from 'react-router-dom';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [token, setToken] = useState(window.localStorage.getItem('spotify_access_token'));
+  const [token, setToken] = useState(
+    window.localStorage.getItem('spotify_access_token'),
+  );
   const navigate = useNavigate();
 
   const cleanStorageAndToken = () => {

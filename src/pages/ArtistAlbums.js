@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
+import { FaArrowLeft } from 'react-icons/fa';
 import { useAuth } from '../context/AuthContext';
 import { getArtistAlbums } from '../api/Spotify';
-import { FaArrowLeft } from 'react-icons/fa';
 import Loading from '../components/Loading';
 
 const ArtistAlbums = () => {
@@ -19,9 +19,17 @@ const ArtistAlbums = () => {
 
     // TODO: Add pagination
     getArtistAlbums(token, artistId, 20)
-      .then(res => { if (res.status === 401 || res.status === 403) { logout(); return null; } return res.json(); })
-      .then(data => setAlbums(data?.items || []))
-      .catch(err => console.error(`Error fetching albums for ${artistName}:`, err));
+      .then((res) => {
+        if (res.status === 401 || res.status === 403) {
+          logout();
+          return null;
+        }
+        return res.json();
+      })
+      .then((data) => setAlbums(data?.items || []))
+      .catch((err) =>
+        console.error(`Error fetching albums for ${artistName}:`, err),
+      );
   }, [token, logout, artistId, artistName]);
 
   if (!albums) {
@@ -41,7 +49,7 @@ const ArtistAlbums = () => {
             <span className="artist-name">{artistName}</span>
           </Link>
         </div>
-        
+
         {artistImage && (
           <img
             src={artistImage}
@@ -52,9 +60,13 @@ const ArtistAlbums = () => {
       </div>
 
       <div className="single-column">
-        {albums.map(album => (
+        {albums.map((album) => (
           <div key={album.id} className="album-card">
-            <img src={album.images[0]?.url} alt={album.name} className="album-image" />
+            <img
+              src={album.images[0]?.url}
+              alt={album.name}
+              className="album-image"
+            />
             <div className="album-info">
               <h4>{album.name}</h4>
               <p>{album.release_date}</p>

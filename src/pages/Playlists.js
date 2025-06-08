@@ -1,6 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { getUserProfile, getUserPlaylists, createPlaylist } from '../api/Spotify';
+import {
+  getUserProfile,
+  getUserPlaylists,
+  createPlaylist,
+} from '../api/Spotify';
 import Loading from '../components/Loading';
 import Button from '../components/Button';
 import Modal from '../components/Modal';
@@ -15,9 +19,15 @@ const Playlists = () => {
   useEffect(() => {
     if (!token) return;
     getUserProfile(token)
-      .then(res => { if (res.status === 401 || res.status === 403) { logout(); return null; } return res.json(); })
-      .then(data => setUser(data))
-      .catch(err => console.error("Error fetching user:", err));
+      .then((res) => {
+        if (res.status === 401 || res.status === 403) {
+          logout();
+          return null;
+        }
+        return res.json();
+      })
+      .then((data) => setUser(data))
+      .catch((err) => console.error('Error fetching user:', err));
   }, [token, logout]);
 
   const fetchPlaylists = useCallback(() => {
@@ -25,9 +35,15 @@ const Playlists = () => {
 
     // TODO: Add pagination
     getUserPlaylists(token, 10)
-      .then(res => { if (res.status === 401 || res.status === 403) { logout(); return null; } return res.json(); })
-      .then(data => setPlaylists(data?.items || []))
-      .catch(err => console.error("Error fetching playlists:", err));
+      .then((res) => {
+        if (res.status === 401 || res.status === 403) {
+          logout();
+          return null;
+        }
+        return res.json();
+      })
+      .then((data) => setPlaylists(data?.items || []))
+      .catch((err) => console.error('Error fetching playlists:', err));
   }, [token, logout]);
 
   useEffect(() => {
@@ -37,7 +53,7 @@ const Playlists = () => {
   const handleCreatePlaylist = () => {
     if (!user?.id || !newPlaylistName.trim()) return;
     createPlaylist(token, user.id, newPlaylistName)
-      .then(res => {
+      .then((res) => {
         if (!res.ok) throw new Error('Failed creating playlist');
         return res.json();
       })
@@ -46,7 +62,7 @@ const Playlists = () => {
         setShowDialog(false);
         setNewPlaylistName('');
       })
-      .catch(err => console.error("Error creating playlist:", err));
+      .catch((err) => console.error('Error creating playlist:', err));
   };
 
   if (!user || !playlists) {
@@ -64,18 +80,30 @@ const Playlists = () => {
           <h2 className="section-title">Minhas Playlists</h2>
           <p className="section-subtitle">Sua coleção pessoal de playlists</p>
         </div>
-        <Button onClick={() => setShowDialog(true)}>
-          Criar Playlist
-        </Button>
+        <Button onClick={() => setShowDialog(true)}>Criar Playlist</Button>
       </div>
 
       <div className="single-column">
-        {playlists.map(playlist => (
+        {playlists.map((playlist) => (
           <div className="artist-card" key={playlist.id}>
             {playlist.images?.[0]?.url ? (
-              <img src={playlist.images[0].url} alt={playlist.name} className="artist-round-image" />
+              <img
+                src={playlist.images[0].url}
+                alt={playlist.name}
+                className="artist-round-image"
+              />
             ) : (
-              <div className="artist-round-image" style={{ backgroundColor: '#333', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>🎵</div>
+              <div
+                className="artist-round-image"
+                style={{
+                  backgroundColor: '#333',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                🎵
+              </div>
             )}
             <div>
               <h4 className="artist-name">{playlist.name}</h4>
