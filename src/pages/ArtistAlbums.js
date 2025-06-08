@@ -3,6 +3,7 @@ import { useParams, useLocation, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getArtistAlbums } from '../api/Spotify';
 import { FaArrowLeft } from 'react-icons/fa';
+import Loading from '../components/Loading';
 
 const ArtistAlbums = () => {
   const { token, logout } = useAuth();
@@ -18,13 +19,17 @@ const ArtistAlbums = () => {
 
     // TODO: Add pagination
     getArtistAlbums(token, artistId, 20)
-      .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
+      .then(res => { if (res.status === 401 || res.status === 403) { logout(); return null; } return res.json(); })
       .then(data => setAlbums(data?.items || []))
       .catch(err => console.error(`Error fetching albums for ${artistName}:`, err));
   }, [token, logout, artistId, artistName]);
 
-  if (!albums || !albums.length) {
-    return <div>Carregando álbuns...</div>;
+  if (!albums) {
+    return <Loading message="Carregando álbums..." />;
+  }
+
+  if (albums.length === 0) {
+    return <div>Nenhum álbum encontrado para este artista</div>;
   }
 
   return (

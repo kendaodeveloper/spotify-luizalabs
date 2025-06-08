@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getTopArtists } from '../api/Spotify';
+import Loading from '../components/Loading';
 
 const Artists = () => {
   const { token, logout } = useAuth();
@@ -12,13 +13,17 @@ const Artists = () => {
 
     // TODO: Add pagination
     getTopArtists(token, 10)
-      .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
+      .then(res => { if (res.status === 401 || res.status === 403) { logout(); return null; } return res.json(); })
       .then(data => setArtists(data?.items || []))
       .catch(err => console.error("Error fetching top artists:", err));
   }, [token, logout]);
 
-  if (!artists || !artists.length) {
-    return <div>Carregando artistas...</div>;
+  if (!artists) {
+    return <Loading message="Carregando artistas..." />;
+  }
+
+  if (artists.length === 0) {
+    return <div>Nenhum artista encontrado</div>;
   }
 
   return (

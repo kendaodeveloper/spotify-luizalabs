@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getUserProfile, getUserPlaylists, createPlaylist } from '../api/Spotify';
+import Loading from '../components/Loading';
 
 const Playlists = () => {
   const { token, logout } = useAuth();
@@ -12,7 +13,7 @@ const Playlists = () => {
   useEffect(() => {
     if (!token) return;
     getUserProfile(token)
-      .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
+      .then(res => { if (res.status === 401 || res.status === 403) { logout(); return null; } return res.json(); })
       .then(data => setUser(data))
       .catch(err => console.error("Error fetching user:", err));
   }, [token, logout]);
@@ -22,7 +23,7 @@ const Playlists = () => {
 
     // TODO: Add pagination
     getUserPlaylists(token, 10)
-      .then(res => { if (res.status === 401) { logout(); return null; } return res.json(); })
+      .then(res => { if (res.status === 401 || res.status === 403) { logout(); return null; } return res.json(); })
       .then(data => setPlaylists(data?.items || []))
       .catch(err => console.error("Error fetching playlists:", err));
   }, [token, logout]);
@@ -46,8 +47,12 @@ const Playlists = () => {
       .catch(err => console.error("Error creating playlist:", err));
   };
 
-  if (!user || !playlists || !playlists.length) {
-    return <div>Carregando playlists...</div>;
+  if (!user || !playlists) {
+    return <Loading message="Carregando playlists..." />;
+  }
+
+  if (playlists.length === 0) {
+    return <div>Nenhuma playlist encontrada</div>;
   }
 
   return (

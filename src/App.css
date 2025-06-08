@@ -241,6 +241,7 @@ body {
 .artist-info {
   display: flex;
   align-items: center;
+  padding: 25px 0px;
 }
 
 .artist-back-link {
@@ -420,4 +421,15 @@ section h2 {
 
 .dialog-input:focus {
   border-bottom-color: #1DB954;
+}
+
+/* --- Loading --- */
+
+.spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getUserProfile } from '../api/Spotify';
+import Loading from '../components/Loading';
 
 const Profile = () => {
   const { token, logout } = useAuth();
@@ -11,7 +12,7 @@ const Profile = () => {
 
     getUserProfile(token)
       .then(res => {
-        if (res.status === 401) {
+        if (res.status === 401 || res.status === 403) {
           logout();
           return null;
         }
@@ -22,7 +23,7 @@ const Profile = () => {
   }, [token, logout]);
 
   if (!user) {
-    return <div>Carregando perfil...</div>;
+    return <Loading message="Carregando perfil..." />;
   }
 
   return (
