@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import Login from './Login';
 import { useAuth } from '../context/AuthContext';
-import * as PKCE from '../utils/PKCEx';
+import * as PKCE from '../utils/PKCE';
 
 jest.mock('../context/AuthContext');
 jest.mock('../utils/PKCE', () => ({

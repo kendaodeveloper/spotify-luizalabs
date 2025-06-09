@@ -2,7 +2,7 @@ import SpotifyImage from './../assets/spotify.png';
 import {
   generateRandomString,
   generateCodeChallenge,
-} from '../utils/PKCEx';
+} from '../utils/PKCE';
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
 

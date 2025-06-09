@@ -1,4 +1,4 @@
-import { generateRandomString, generateCodeChallenge } from './PKCEx';
+import { generateRandomString, generateCodeChallenge } from './PKCE';
 import { Crypto } from '@peculiar/webcrypto';
 
 const crypto = new Crypto();
