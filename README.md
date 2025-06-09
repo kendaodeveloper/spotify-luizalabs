@@ -91,6 +91,6 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - [ ] Testes E2E
 - [ ] Integração com Sentry
 - [ ] CI/CD
-- [ ] Responsividade (celular e tablet)
+- [X] Responsividade (celular e tablet)
 - [ ] Qualidade de código (Sonarqube)
 - [ ] PWA

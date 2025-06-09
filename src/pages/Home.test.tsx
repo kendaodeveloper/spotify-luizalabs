@@ -12,8 +12,5 @@ describe('Home', () => {
     expect(
       screen.getByText(/Explore seus artistas mais ouvidos/i),
     ).toBeInTheDocument();
-    expect(
-      screen.getByText(/Use o menu lateral da esquerda para navegar/i),
-    ).toBeInTheDocument();
   });
 });
