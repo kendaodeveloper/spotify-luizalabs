@@ -3,11 +3,11 @@ import { useAuth } from '../context/AuthContext';
 import { getUserProfile } from '../api/Spotify.api';
 import Loading from '../components/Loading';
 import Button from '../components/Button';
-import { SpotifyUser } from '../api/Spotify.dto';
+import { User } from '../api/Spotify.dto';
 
 const Profile: React.FC = () => {
   const { token, logout } = useAuth();
-  const [user, setUser] = useState<SpotifyUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
 
   useEffect(() => {
     if (!token) return;

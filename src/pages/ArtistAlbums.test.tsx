@@ -1,120 +1,118 @@
-import { render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Routes, Route } from 'react-router';
-import { useAuth } from '../context/AuthContext';
-import { getArtistAlbums } from '../api/Spotify.api';
-import ArtistAlbums from './ArtistAlbums';
+import React from 'react';
+import { render, screen } from '@testing-library/react';
+import ArtistAlbums from '../pages/ArtistAlbums';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import { useParams, useLocation } from 'react-router';
 
-jest.mock('../context/AuthContext');
-jest.mock('../api/Spotify.api');
+jest.mock('../hooks/useInfiniteScroll');
+// eslint-disable-next-line @typescript-eslint/no-explicit-any, react/display-name
+jest.mock('../components/Card', () => (props: any) => (
+  <div data-testid="card">{props.title}</div>
+));
 
-const mockUseAuth = useAuth as jest.Mock;
-const mockGetArtistAlbums = getArtistAlbums as jest.Mock;
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
+  useParams: jest.fn(),
+  useLocation: jest.fn(),
+  Link: ({ children, to }: { children: React.ReactNode; to: string }) => (
+    <a href={to}>{children}</a>
+  ),
+}));
 
-const mockAlbumsData = {
-  items: [
-    {
-      id: 'album1',
-      name: 'Album One',
-      release_date: '2023-01-01',
-      images: [{ url: 'album1.jpg' }],
-    },
-    {
-      id: 'album2',
-      name: 'Album Two',
-      release_date: '2022-02-02',
-      images: [{ url: 'album2.jpg' }],
-    },
-  ],
-};
+const mockUseInfiniteScroll = useInfiniteScroll as jest.Mock;
+const mockUseParams = useParams as jest.Mock;
+const mockUseLocation = useLocation as jest.Mock;
 
-const artistLocationState = {
-  artistName: 'Test Artist',
-  artistImage: 'artist.jpg',
-};
-
-const renderComponent = () => {
-  return render(
-    <MemoryRouter
-      initialEntries={[
-        { pathname: '/artists/123', state: artistLocationState },
-      ]}
-    >
-      <Routes>
-        <Route path="/artists/:artistId" element={<ArtistAlbums />} />
-      </Routes>
-    </MemoryRouter>,
-  );
-};
-
-describe('ArtistAlbums', () => {
+describe('ArtistAlbums Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+    mockUseParams.mockReturnValue({ artistId: '123' });
+    mockUseLocation.mockReturnValue({
+      state: {
+        artistName: 'Test Artist',
+        artistImage: 'image-url.jpg',
+      },
+    });
   });
 
-  it('should render loading state initially', () => {
-    mockUseAuth.mockReturnValue({ token: 'fake-token' });
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    mockGetArtistAlbums.mockReturnValue(new Promise(() => {}));
+  test('shows initial loading state', () => {
+    mockUseInfiniteScroll.mockReturnValue({
+      items: [],
+      loading: true,
+      hasMore: true,
+      loaderRef: jest.fn(),
+    });
 
-    renderComponent();
+    render(<ArtistAlbums />);
     expect(screen.getByText('Carregando álbuns...')).toBeInTheDocument();
   });
 
-  it('should fetch and display albums for a given artist', async () => {
-    mockUseAuth.mockReturnValue({ token: 'fake-token' });
-    mockGetArtistAlbums.mockResolvedValue({
-      status: 200,
-      json: () => Promise.resolve(mockAlbumsData),
+  test('shows message when no albums are found', () => {
+    mockUseInfiniteScroll.mockReturnValue({
+      items: [],
+      loading: false,
+      hasMore: false,
+      loaderRef: jest.fn(),
     });
 
-    renderComponent();
+    render(<ArtistAlbums />);
+    expect(
+      screen.getByText('Nenhum álbum encontrado para este artista.'),
+    ).toBeInTheDocument();
+  });
 
-    await waitFor(() => {
-      expect(screen.getByText('Album One')).toBeInTheDocument();
-      expect(screen.getByText('2023-01-01')).toBeInTheDocument();
-      expect(screen.getByText('Album Two')).toBeInTheDocument();
+  test('renders artist header and album list', () => {
+    const mockAlbums = [
+      {
+        id: 'a1',
+        name: 'Album One',
+        images: [{ url: 'url1' }],
+        release_date: '2023',
+      },
+      {
+        id: 'a2',
+        name: 'Album Two',
+        images: [{ url: 'url2' }],
+        release_date: '2024',
+      },
+    ];
+    mockUseInfiniteScroll.mockReturnValue({
+      items: mockAlbums,
+      loading: false,
+      hasMore: true,
+      loaderRef: jest.fn(),
     });
+
+    render(<ArtistAlbums />);
 
     expect(screen.getByText('Test Artist')).toBeInTheDocument();
     expect(screen.getByAltText('Test Artist')).toHaveAttribute(
       'src',
-      'artist.jpg',
+      'image-url.jpg',
     );
-    expect(mockGetArtistAlbums).toHaveBeenCalledWith(
-      'fake-token',
-      '123',
-      20,
-    );
+    expect(screen.getByText('Album One')).toBeInTheDocument();
+    expect(screen.getByText('Album Two')).toBeInTheDocument();
+    expect(screen.getAllByTestId('card')).toHaveLength(2);
   });
 
-  it('should display a message if no albums are found', async () => {
-    mockUseAuth.mockReturnValue({ token: 'fake-token' });
-    mockGetArtistAlbums.mockResolvedValue({
-      status: 200,
-      json: () => Promise.resolve({ items: [] }),
+  test('uses default name when location state is missing', () => {
+    mockUseLocation.mockReturnValue({ state: null });
+    const mockAlbums = [
+      {
+        id: 'a1',
+        name: 'Album One',
+        images: [{ url: 'url1' }],
+        release_date: '2023',
+      },
+    ];
+    mockUseInfiniteScroll.mockReturnValue({
+      items: mockAlbums,
+      loading: false,
+      hasMore: false,
+      loaderRef: jest.fn(),
     });
 
-    renderComponent();
-
-    await waitFor(() => {
-      expect(
-        screen.getByText('Nenhum álbum encontrado para este artista.'),
-      ).toBeInTheDocument();
-    });
-  });
-
-  it('should call logout on 403 API response', async () => {
-    const logoutMock = jest.fn();
-    mockUseAuth.mockReturnValue({
-      token: 'fake-token',
-      logout: logoutMock,
-    });
-    mockGetArtistAlbums.mockResolvedValue({ status: 403 });
-
-    renderComponent();
-
-    await waitFor(() => {
-      expect(logoutMock).toHaveBeenCalledTimes(1);
-    });
+    render(<ArtistAlbums />);
+    expect(screen.getByText('Artista')).toBeInTheDocument();
   });
 });

@@ -1,36 +1,32 @@
-import { useState, useEffect } from 'react';
+import { useCallback } from 'react';
 import { Link } from 'react-router';
-import { useAuth } from '../context/AuthContext';
 import { getTopArtists } from '../api/Spotify.api';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import Loading from '../components/Loading';
 import SectionHeader from '../components/SectionHeader';
 import Card from '../components/Card';
 import { Artist } from '../api/Spotify.dto';
 
 const Artists: React.FC = () => {
-  const { token, logout } = useAuth();
-  const [artists, setArtists] = useState<Artist[] | null>(null);
+  const fetchArtistsFn = useCallback(
+    (authToken: string, limit: number, offset: number) => {
+      return getTopArtists(authToken, limit, offset);
+    },
+    [],
+  );
 
-  useEffect(() => {
-    if (!token) return;
+  const {
+    items: artists,
+    loading,
+    hasMore,
+    loaderRef,
+  } = useInfiniteScroll<Artist>(fetchArtistsFn);
 
-    getTopArtists(token, 10)
-      .then((res) => {
-        if (res.status === 401 || res.status === 403) {
-          logout();
-          return null;
-        }
-        return res.json();
-      })
-      .then((data) => setArtists(data?.items || []))
-      .catch((err) => console.error('Error fetching top artists:', err));
-  }, [token, logout]);
-
-  if (!artists) {
+  if (loading && artists.length === 0) {
     return <Loading message="Carregando artistas..." />;
   }
 
-  if (artists.length === 0) {
+  if (!loading && artists.length === 0) {
     return <div>Nenhum artista encontrado.</div>;
   }
 
@@ -57,6 +53,9 @@ const Artists: React.FC = () => {
             />
           </Link>
         ))}
+      </div>
+      <div ref={loaderRef} style={{ height: '100px', margin: '20px 0' }}>
+        {loading && hasMore && <Loading message="Carregando mais..." />}
       </div>
     </section>
   );

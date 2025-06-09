@@ -5,19 +5,33 @@ import {
   getUserPlaylists,
   createPlaylist,
 } from '../api/Spotify.api';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import Loading from '../components/Loading';
 import Button from '../components/Button';
 import Modal from '../components/Modal';
 import SectionHeader from '../components/SectionHeader';
 import Card from '../components/Card';
-import { Playlist, SpotifyUser } from '../api/Spotify.dto';
+import { Playlist, User } from '../api/Spotify.dto';
 
 const Playlists: React.FC = () => {
   const { token, logout } = useAuth();
-  const [playlists, setPlaylists] = useState<Playlist[] | null>(null);
-  const [user, setUser] = useState<SpotifyUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [newPlaylistName, setNewPlaylistName] = useState<string>('');
+
+  const fetchPlaylistsFn = useCallback(
+    (authToken: string, limit: number, offset: number) => {
+      return getUserPlaylists(authToken, limit, offset);
+    },
+    [],
+  );
+
+  const {
+    items: playlists,
+    loading,
+    hasMore,
+    loaderRef,
+  } = useInfiniteScroll<Playlist>(fetchPlaylistsFn);
 
   useEffect(() => {
     if (!token) return;
@@ -33,25 +47,6 @@ const Playlists: React.FC = () => {
       .catch((err) => console.error('Error fetching user:', err));
   }, [token, logout]);
 
-  const fetchPlaylists = useCallback(() => {
-    if (!token) return;
-
-    getUserPlaylists(token, 10)
-      .then((res) => {
-        if (res.status === 401 || res.status === 403) {
-          logout();
-          return null;
-        }
-        return res.json();
-      })
-      .then((data) => setPlaylists(data?.items || []))
-      .catch((err) => console.error('Error fetching playlists:', err));
-  }, [token, logout]);
-
-  useEffect(() => {
-    fetchPlaylists();
-  }, [fetchPlaylists]);
-
   const handleCreatePlaylist = () => {
     if (!token || !user?.id || !newPlaylistName.trim()) return;
     createPlaylist(token, user.id, newPlaylistName)
@@ -60,14 +55,13 @@ const Playlists: React.FC = () => {
         return res.json();
       })
       .then(() => {
-        fetchPlaylists();
         setShowDialog(false);
         setNewPlaylistName('');
       })
       .catch((err) => console.error('Error creating playlist:', err));
   };
 
-  if (!user || !playlists) {
+  if (!user || (loading && playlists.length === 0)) {
     return <Loading message="Carregando playlists..." />;
   }
 
@@ -90,6 +84,9 @@ const Playlists: React.FC = () => {
             subtitle={`${playlist.tracks.total} músicas`}
           />
         ))}
+      </div>
+      <div ref={loaderRef} style={{ height: '100px', margin: '20px 0' }}>
+        {loading && hasMore && <Loading message="Carregando mais..." />}
       </div>
       <Modal isOpen={showDialog} onClose={() => setShowDialog(false)}>
         <label className="dialog-label">Dê um nome à sua playlist:</label>

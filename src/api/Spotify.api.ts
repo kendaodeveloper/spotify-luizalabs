@@ -25,17 +25,23 @@ export async function getUserProfile(token: string): Promise<Response> {
 export async function getTopArtists(
   token: string,
   limit: number,
+  offset: number,
 ): Promise<Response> {
-  return fetchWebApi(`me/top/artists?limit=${limit}`, 'GET', token);
+  return fetchWebApi(
+    `me/top/artists?limit=${limit}&offset=${offset}`,
+    'GET',
+    token,
+  );
 }
 
 export async function getArtistAlbums(
   token: string,
   artistId: string,
   limit: number,
+  offset: number,
 ): Promise<Response> {
   return fetchWebApi(
-    `artists/${artistId}/albums?include_groups=album,single&limit=${limit}`,
+    `artists/${artistId}/albums?include_groups=album,single&limit=${limit}&offset=${offset}`,
     'GET',
     token,
   );
@@ -44,8 +50,13 @@ export async function getArtistAlbums(
 export async function getUserPlaylists(
   token: string,
   limit: number,
+  offset: number,
 ): Promise<Response> {
-  return fetchWebApi(`me/playlists?limit=${limit}`, 'GET', token);
+  return fetchWebApi(
+    `me/playlists?limit=${limit}&offset=${offset}`,
+    'GET',
+    token,
+  );
 }
 
 export async function createPlaylist(

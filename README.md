@@ -80,9 +80,9 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - [X] Autenticação via Spotify
 - [X] Listar artistas
 - [X] Listar albuns de um artista
-- [ ] Utilizar paginação (scroll infinito ou não)
+- [X] Utilizar paginação (scroll infinito ou não)
 - [ ] Funcionamento offline
-- [ ] Testes unitários
+- [X] Testes unitários
 - [ ] Deploy da aplicação
 
 ### Bônus

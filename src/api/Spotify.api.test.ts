@@ -56,9 +56,10 @@ describe('API Utility Functions', () => {
     it('getTopArtists should call fetchWebApi with the correct limit', async () => {
       fetchMock.mockResponseOnce(JSON.stringify({}));
       const limit = 10;
-      await getTopArtists(mockToken, limit);
+      const offset = 0;
+      await getTopArtists(mockToken, limit, offset);
       expect(fetchMock.mock.calls[0][0]).toBe(
-        `${BASE_API_URL}/me/top/artists?limit=${limit}`,
+        `${BASE_API_URL}/me/top/artists?limit=${limit}&offset=0`,
       );
     });
 
@@ -66,18 +67,20 @@ describe('API Utility Functions', () => {
       fetchMock.mockResponseOnce(JSON.stringify({}));
       const artistId = 'artist-123';
       const limit = 5;
-      await getArtistAlbums(mockToken, artistId, limit);
+      const offset = 0;
+      await getArtistAlbums(mockToken, artistId, limit, offset);
       expect(fetchMock.mock.calls[0][0]).toBe(
-        `${BASE_API_URL}/artists/${artistId}/albums?include_groups=album,single&limit=${limit}`,
+        `${BASE_API_URL}/artists/${artistId}/albums?include_groups=album,single&limit=${limit}&offset=0`,
       );
     });
 
     it('getUserPlaylists should call fetchWebApi with the limit', async () => {
       fetchMock.mockResponseOnce(JSON.stringify({}));
       const limit = 20;
-      await getUserPlaylists(mockToken, limit);
+      const offset = 0;
+      await getUserPlaylists(mockToken, limit, offset);
       expect(fetchMock.mock.calls[0][0]).toBe(
-        `${BASE_API_URL}/me/playlists?limit=${limit}`,
+        `${BASE_API_URL}/me/playlists?limit=${limit}&offset=0`,
       );
     });
 

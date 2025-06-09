@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useCallback } from 'react';
 import { useParams, useLocation, Link } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
-import { useAuth } from '../context/AuthContext';
 import { getArtistAlbums } from '../api/Spotify.api';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import Loading from '../components/Loading';
 import Card from '../components/Card';
 import { Album } from '../api/Spotify.dto';
@@ -13,7 +13,6 @@ interface ArtistLocationState {
 }
 
 const ArtistAlbums: React.FC = () => {
-  const { token, logout } = useAuth();
   const { artistId } = useParams<{ artistId: string }>();
   const location = useLocation();
   const state = location.state as ArtistLocationState;
@@ -21,30 +20,30 @@ const ArtistAlbums: React.FC = () => {
   const artistName = state?.artistName || 'Artista';
   const artistImage = state?.artistImage;
 
-  const [albums, setAlbums] = useState<Album[] | null>(null);
+  const fetchAlbumsFn = useCallback(
+    (token: string, limit: number, offset: number) => {
+      if (!artistId) {
+        return Promise.resolve(
+          new Response(JSON.stringify({ items: [], next: null })),
+        );
+      }
+      return getArtistAlbums(token, artistId, limit, offset);
+    },
+    [artistId],
+  );
 
-  useEffect(() => {
-    if (!token || !artistId) return;
+  const {
+    items: albums,
+    loading,
+    hasMore,
+    loaderRef,
+  } = useInfiniteScroll<Album>(fetchAlbumsFn);
 
-    getArtistAlbums(token, artistId, 20)
-      .then((res) => {
-        if (res.status === 401 || res.status === 403) {
-          logout();
-          return null;
-        }
-        return res.json();
-      })
-      .then((data) => setAlbums(data?.items || []))
-      .catch((err) =>
-        console.error(`Error fetching albums for ${artistName}:`, err),
-      );
-  }, [token, logout, artistId, artistName]);
-
-  if (!albums) {
+  if (loading && albums.length === 0) {
     return <Loading message="Carregando álbuns..." />;
   }
 
-  if (albums.length === 0) {
+  if (!loading && albums.length === 0) {
     return <div>Nenhum álbum encontrado para este artista.</div>;
   }
 
@@ -75,6 +74,9 @@ const ArtistAlbums: React.FC = () => {
             subtitle={album.release_date}
           />
         ))}
+      </div>
+      <div ref={loaderRef} style={{ height: '100px', margin: '20px 0' }}>
+        {loading && hasMore && <Loading message="Carregando mais..." />}
       </div>
     </section>
   );

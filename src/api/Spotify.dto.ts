@@ -4,7 +4,7 @@ interface ImageObject {
   width: number;
 }
 
-export interface SpotifyUser {
+export interface User {
   id: string;
   display_name: string;
   images?: ImageObject[];

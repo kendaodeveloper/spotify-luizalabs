@@ -1,133 +1,114 @@
+import React from 'react';
 import {
   render,
   screen,
-  waitFor,
   fireEvent,
+  waitFor,
 } from '@testing-library/react';
+import Playlists from '../pages/Playlists';
 import { useAuth } from '../context/AuthContext';
-import {
-  getUserProfile,
-  getUserPlaylists,
-  createPlaylist,
-} from '../api/Spotify.api';
-import Playlists from './Playlists';
+import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
+import * as api from '../api/Spotify.api';
 
 jest.mock('../context/AuthContext');
+jest.mock('../hooks/useInfiniteScroll');
 jest.mock('../api/Spotify.api');
 
 const mockUseAuth = useAuth as jest.Mock;
-const mockGetUserProfile = getUserProfile as jest.Mock;
-const mockGetUserPlaylists = getUserPlaylists as jest.Mock;
-const mockCreatePlaylist = createPlaylist as jest.Mock;
+const mockUseInfiniteScroll = useInfiniteScroll as jest.Mock;
+const mockApi = api as jest.Mocked<typeof api>;
 
-const mockUserData = { id: 'user1', display_name: 'Test User' };
-const mockPlaylistsData = {
-  items: [
-    {
-      id: 'p1',
-      name: 'My Favs',
-      images: [{ url: 'p1.jpg' }],
-      tracks: { total: 10 },
-    },
-    {
-      id: 'p2',
-      name: 'Road Trip',
-      images: [{ url: 'p2.jpg' }],
-      tracks: { total: 50 },
-    },
-  ],
-};
-
-describe('Playlists', () => {
+describe('Playlists Component', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseAuth.mockReturnValue({
       token: 'fake-token',
       logout: jest.fn(),
     });
-
-    mockGetUserProfile.mockResolvedValue({
-      status: 200,
-      json: () => Promise.resolve(mockUserData),
+    mockUseInfiniteScroll.mockReturnValue({
+      items: [],
+      loading: false,
+      hasMore: false,
+      loaderRef: jest.fn(),
     });
-    mockGetUserPlaylists.mockResolvedValue({
+    mockApi.getUserProfile.mockResolvedValue({
+      ok: true,
       status: 200,
-      json: () => Promise.resolve(mockPlaylistsData),
-    });
+      json: () =>
+        Promise.resolve({ id: 'user-1', display_name: 'Test User' }),
+    } as Response);
   });
 
-  it('should render loading state initially', () => {
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    mockGetUserPlaylists.mockReturnValue(new Promise(() => {}));
+  test('fetches user and renders playlists', async () => {
+    const mockPlaylists = [
+      {
+        id: 'p1',
+        name: 'My Favs',
+        images: [{ url: 'url1' }],
+        tracks: { total: 10 },
+      },
+    ];
+    mockUseInfiniteScroll.mockReturnValue({
+      items: mockPlaylists,
+      loading: false,
+      hasMore: false,
+      loaderRef: jest.fn(),
+    });
 
-    render(<Playlists />);
-    expect(
-      screen.getByText('Carregando playlists...'),
-    ).toBeInTheDocument();
-  });
-
-  it('should fetch user and playlists and display them', async () => {
     render(<Playlists />);
 
     await waitFor(() => {
       expect(screen.getByText('My Favs')).toBeInTheDocument();
       expect(screen.getByText('10 músicas')).toBeInTheDocument();
-      expect(screen.getByText('Road Trip')).toBeInTheDocument();
-      expect(screen.getByText('50 músicas')).toBeInTheDocument();
     });
-
-    expect(mockGetUserProfile).toHaveBeenCalledWith('fake-token');
-    expect(mockGetUserPlaylists).toHaveBeenCalledWith('fake-token', 10);
+    expect(mockApi.getUserProfile).toHaveBeenCalledWith('fake-token');
   });
 
-  it('should open modal on "Criar Playlist" button click', async () => {
-    render(<Playlists />);
-    await waitFor(() =>
-      expect(screen.getByText('My Favs')).toBeInTheDocument(),
-    );
+  test('opens, fills, and submits the create playlist modal', async () => {
+    mockApi.createPlaylist.mockResolvedValue({
+      ok: true,
+      status: 201,
+      json: () => Promise.resolve({ id: 'new-playlist' }),
+    } as Response);
 
-    const createButton = screen.getByRole('button', {
-      name: /Criar Playlist/i,
+    render(<Playlists />);
+
+    await waitFor(() => {
+      expect(screen.getByText('Criar Playlist')).toBeInTheDocument();
     });
-    fireEvent.click(createButton);
+
+    fireEvent.click(screen.getByText('Criar Playlist'));
 
     expect(
       screen.getByText('Dê um nome à sua playlist:'),
     ).toBeInTheDocument();
-    expect(
-      screen.getByPlaceholderText('Nome da playlist'),
-    ).toBeInTheDocument();
-  });
-
-  it('should create a new playlist and refresh the list', async () => {
-    mockCreatePlaylist.mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({ id: 'new-p' }),
-    });
-    render(<Playlists />);
-    await waitFor(() =>
-      expect(screen.getByText('My Favs')).toBeInTheDocument(),
-    );
-
-    fireEvent.click(
-      screen.getByRole('button', { name: /Criar Playlist/i }),
-    );
 
     const input = screen.getByPlaceholderText('Nome da playlist');
-    fireEvent.change(input, { target: { value: 'New Awesome Playlist' } });
+    const createButton = screen.getByRole('button', { name: 'Criar' });
 
-    const createInModalButton = screen.getByRole('button', {
-      name: 'Criar',
-    });
-    fireEvent.click(createInModalButton);
+    fireEvent.change(input, { target: { value: 'New Awesome Playlist' } });
+    fireEvent.click(createButton);
 
     await waitFor(() => {
-      expect(mockCreatePlaylist).toHaveBeenCalledWith(
+      expect(mockApi.createPlaylist).toHaveBeenCalledWith(
         'fake-token',
-        'user1',
+        'user-1',
         'New Awesome Playlist',
       );
-      expect(mockGetUserPlaylists).toHaveBeenCalledTimes(2);
     });
+  });
+
+  test('shows loading state when user and playlists are loading', () => {
+    mockUseInfiniteScroll.mockReturnValue({
+      items: [],
+      loading: true,
+      hasMore: true,
+      loaderRef: jest.fn(),
+    });
+
+    render(<Playlists />);
+    expect(
+      screen.getByText('Carregando playlists...'),
+    ).toBeInTheDocument();
   });
 });
