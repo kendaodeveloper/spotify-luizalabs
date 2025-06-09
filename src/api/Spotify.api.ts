@@ -2,7 +2,7 @@ const BASE_API_URL = 'https://api.spotify.com/v1';
 
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
-async function fetchWebApi(
+export async function fetchWebApi(
   endpoint: string,
   method: HttpMethod,
   token: string,

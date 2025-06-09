@@ -4,7 +4,7 @@ import {
   getUserProfile,
   getUserPlaylists,
   createPlaylist,
-} from '../api/Spotify';
+} from '../api/Spotify.api';
 import Loading from '../components/Loading';
 import Button from '../components/Button';
 import Modal from '../components/Modal';

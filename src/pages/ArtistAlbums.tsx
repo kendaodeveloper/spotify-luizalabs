@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useParams, useLocation, Link } from 'react-router-dom';
+import { useParams, useLocation, Link } from 'react-router';
 import { ArrowLeft } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { getArtistAlbums } from '../api/Spotify';
+import { getArtistAlbums } from '../api/Spotify.api';
 import Loading from '../components/Loading';
 import Card from '../components/Card';
 import { Album } from '../api/Spotify.dto';

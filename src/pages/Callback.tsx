@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import { useAuth } from '../context/AuthContext';
 import Loading from '../components/Loading';
 import { SpotifyTokenResponse } from '../api/Spotify.dto';

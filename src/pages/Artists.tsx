@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
 import { useAuth } from '../context/AuthContext';
-import { getTopArtists } from '../api/Spotify';
+import { getTopArtists } from '../api/Spotify.api';
 import Loading from '../components/Loading';
 import SectionHeader from '../components/SectionHeader';
 import Card from '../components/Card';

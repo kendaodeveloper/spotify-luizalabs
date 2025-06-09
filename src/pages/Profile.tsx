@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { getUserProfile } from '../api/Spotify';
+import { getUserProfile } from '../api/Spotify.api';
 import Loading from '../components/Loading';
 import Button from '../components/Button';
 import { SpotifyUser } from '../api/Spotify.dto';
