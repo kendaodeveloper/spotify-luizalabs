@@ -27,9 +27,20 @@ describe('Utility Functions', () => {
   });
 
   describe('generateCodeChallenge', () => {
+    let originalCrypto: Crypto;
+    beforeEach(() => {
+      originalCrypto = window.crypto;
+    });
+
+    afterEach(() => {
+      Object.defineProperty(window, 'crypto', {
+        value: originalCrypto,
+        writable: true,
+      });
+    });
+
     it('should generate a valid code challenge from the code verifier', async () => {
       const codeVerifier = 'a'.repeat(43);
-
       const challenge = await generateCodeChallenge(codeVerifier);
 
       expect(typeof challenge).toBe('string');
@@ -37,6 +48,19 @@ describe('Utility Functions', () => {
       expect(challenge).not.toContain('+');
       expect(challenge).not.toContain('/');
       expect(challenge).not.toContain('=');
+    });
+
+    it('should throw an error if window.crypto.subtle is not available', async () => {
+      Object.defineProperty(window, 'crypto', {
+        value: { ...window.crypto, subtle: undefined },
+        writable: true,
+      });
+
+      const codeVerifier = 'any-string';
+
+      await expect(generateCodeChallenge(codeVerifier)).rejects.toThrow(
+        'Invalid Crypto Object!',
+      );
     });
   });
 });

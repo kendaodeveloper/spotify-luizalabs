@@ -54,6 +54,8 @@ Your app is ready to be deployed!
 
 The deployment section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
+PS: You can run the app after compilation using the command: `npx serve -s build`.
+
 ### `npm run lint`
 
 Runs ESLint to analyze all files in the project for code style errors and potential issues.
@@ -81,7 +83,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - [X] Listar artistas
 - [X] Listar albuns de um artista
 - [X] Utilizar paginação (scroll infinito ou não)
-- [ ] Funcionamento offline
+- [X] Funcionamento offline
 - [X] Testes unitários
 - [ ] Deploy da aplicação
 

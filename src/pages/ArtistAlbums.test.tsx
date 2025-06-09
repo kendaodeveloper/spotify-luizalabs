@@ -23,7 +23,7 @@ const mockUseInfiniteScroll = useInfiniteScroll as jest.Mock;
 const mockUseParams = useParams as jest.Mock;
 const mockUseLocation = useLocation as jest.Mock;
 
-describe('ArtistAlbums Component', () => {
+describe('ArtistAlbums', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseParams.mockReturnValue({ artistId: '123' });

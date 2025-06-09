@@ -12,6 +12,9 @@ export async function generateCodeChallenge(
   codeVerifier: string,
 ): Promise<string> {
   const data = new TextEncoder().encode(codeVerifier);
+  if (!window.crypto || !window.crypto.subtle) {
+    throw new Error('Invalid Crypto Object!');
+  }
   const digest = await window.crypto.subtle.digest('SHA-256', data);
   const base64 = btoa(
     String.fromCharCode.apply(null, Array.from(new Uint8Array(digest))),

@@ -18,7 +18,7 @@ const mockUseAuth = useAuth as jest.Mock;
 const mockUseInfiniteScroll = useInfiniteScroll as jest.Mock;
 const mockApi = api as jest.Mocked<typeof api>;
 
-describe('Playlists Component', () => {
+describe('Playlists', () => {
   beforeEach(() => {
     jest.clearAllMocks();
     mockUseAuth.mockReturnValue({
