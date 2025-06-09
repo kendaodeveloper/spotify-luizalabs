@@ -54,9 +54,11 @@ const Artists: React.FC = () => {
           </Link>
         ))}
       </div>
-      <div ref={loaderRef} style={{ height: '100px', margin: '20px 0' }}>
-        {loading && hasMore && <Loading message="Carregando mais..." />}
-      </div>
+      {hasMore && (
+        <div ref={loaderRef} className="loader-container">
+          {loading && <Loading message="Carregando mais..." />}
+        </div>
+      )}
     </section>
   );
 };

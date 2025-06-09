@@ -431,6 +431,11 @@ body {
   color: #ffffff;
 }
 
+.loader-container {
+  height: 75px;
+  margin-top: 20px;
+}
+
 /* --- Buttons --- */
 
 .btn-primary {

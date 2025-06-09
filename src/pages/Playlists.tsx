@@ -85,9 +85,11 @@ const Playlists: React.FC = () => {
           />
         ))}
       </div>
-      <div ref={loaderRef} style={{ height: '100px', margin: '20px 0' }}>
-        {loading && hasMore && <Loading message="Carregando mais..." />}
-      </div>
+      {hasMore && (
+        <div ref={loaderRef} className="loader-container">
+          {loading && <Loading message="Carregando mais..." />}
+        </div>
+      )}
       <Modal isOpen={showDialog} onClose={() => setShowDialog(false)}>
         <label className="dialog-label">Dê um nome à sua playlist:</label>
         <input
