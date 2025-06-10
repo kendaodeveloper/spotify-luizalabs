@@ -52,9 +52,9 @@ It correctly bundles React in production mode and optimizes the build for the be
 The build is minified and the filenames include the hashes.\
 Your app is ready to be deployed!
 
-The deployment section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+You can run the app after compilation using the following command: `npx serve -s build`.
 
-PS: You can run the app after compilation using the command: `npx serve -s build`.
+Deployment guide: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
 ### `npm run lint`
 
@@ -67,6 +67,19 @@ It's useful for checking code quality before committing to the repository.
 Runs ESLint in the same way as npm run lint, but also attempts to automatically fix any issues that are fixable.
 
 It's a quick way to align the code with the style rules defined for the project.
+
+### Live App
+
+Link: https://spotify-luizalabs-eight.vercel.app/login
+
+Note: Since it's not possible to set environment variables in a deployed app per user, you must provide your Spotify Client ID as a URL parameter when accessing the app:
+
+```
+https://spotify-luizalabs-eight.vercel.app/login?client_id=YOUR_CLIENT_ID
+```
+Replace YOUR_CLIENT_ID with the Client ID you obtained from the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
+
+PS: The Redirect URI must be: `https://spotify-luizalabs-eight.vercel.app/callback`.
 
 ## Learn More
 
@@ -85,7 +98,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - [X] Utilizar paginação (scroll infinito ou não)
 - [X] Funcionamento offline
 - [X] Testes unitários
-- [ ] Deploy da aplicação
+- [X] Deploy da aplicação
 
 ### Bônus
 - [ ] Testes E2E

@@ -20,7 +20,8 @@ const Callback: React.FC = () => {
     cleanStorageAndToken();
 
     if (code && codeVerifier) {
-      const clientId = process.env.REACT_APP_CLIENT_ID;
+      const clientId =
+        searchParams.get('client_id') || process.env.REACT_APP_CLIENT_ID;
       const redirectUri = `${process.env.REACT_APP_URI}/callback`;
 
       const params = new URLSearchParams();

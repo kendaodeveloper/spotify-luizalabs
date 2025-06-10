@@ -3,16 +3,19 @@ import {
   generateRandomString,
   generateCodeChallenge,
 } from '../utils/PKCE';
+import { useSearchParams } from 'react-router';
 import { useAuth } from '../context/AuthContext';
 import Button from '../components/Button';
 
 const Login: React.FC = () => {
+  const [searchParams] = useSearchParams();
   const { cleanStorageAndToken } = useAuth();
 
   const handleLogin = async () => {
     cleanStorageAndToken();
 
-    const clientId = process.env.REACT_APP_CLIENT_ID;
+    const clientId =
+      searchParams.get('client_id') || process.env.REACT_APP_CLIENT_ID;
     const redirectUri = `${process.env.REACT_APP_URI}/callback`;
 
     if (!clientId || !redirectUri) {
