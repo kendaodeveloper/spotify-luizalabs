@@ -1,3 +1,5 @@
+/* --- general --- */
+
 a {
   color: inherit;
   text-decoration: none;
@@ -47,12 +49,20 @@ body {
   margin: 10px 0;
 }
 
-/* --- Home --- */
+/* --- Layout --- */
+
+.main-content {
+  flex-grow: 1;
+  padding: 24px 40px;
+  overflow-y: auto;
+}
 
 .home-layout {
   display: flex;
   height: 100vh;
 }
+
+/* --- Home --- */
 
 .home-container {
   padding: 0rem;
@@ -69,12 +79,6 @@ body {
   max-width: 750px;
   line-height: 1.5;
   margin-bottom: 1.5rem;
-}
-
-.main-content {
-  flex-grow: 1;
-  padding: 24px 40px;
-  overflow-y: auto;
 }
 
 /* --- Sidebar --- */
@@ -173,7 +177,7 @@ body {
   color: #fff;
 }
 
-/* --- Artists & Albums --- */
+/* --- Section Headers --- */
 
 .section-header {
   margin-bottom: 0rem;
@@ -192,11 +196,7 @@ body {
   margin-bottom: 24px;
 }
 
-.single-column {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
+/* --- Artists & Albums --- */
 
 .artist-name {
   font-size: 18px;
@@ -486,6 +486,7 @@ body {
     flex-grow: 1;
     padding: 1rem;
     overflow-y: auto;
+    padding-bottom: 80px;
   }
 
   .sidebar {
@@ -524,10 +525,6 @@ body {
   .sidebar-icon {
     margin-right: 0;
     font-size: 1.5rem;
-  }
-
-  .main-content {
-    padding-bottom: 80px;
   }
 
   .spotify-sidebar {
