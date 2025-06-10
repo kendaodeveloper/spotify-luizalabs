@@ -24,7 +24,7 @@ jobs:
         with:
           projectBaseDir: .
           args: >
-            -Dsonar.organization=your-organization-key
-            -Dsonar.projectKey=your-project-key
+            -Dsonar.organization=kendaodeveloper
+            -Dsonar.projectKey=spotify-luizalabs
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
