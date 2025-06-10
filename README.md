@@ -103,7 +103,7 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 ### Bônus
 - [ ] Testes E2E
 - [ ] Integração com Sentry
-- [ ] CI/CD
+- [X] CI/CD
 - [X] Responsividade (celular e tablet)
 - [ ] Qualidade de código (Sonarqube)
 - [X] PWA
