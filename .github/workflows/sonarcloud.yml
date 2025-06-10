@@ -26,5 +26,8 @@ jobs:
           args: >
             -Dsonar.organization=kendaodeveloper
             -Dsonar.projectKey=spotify-luizalabs
+            -Dsonar.projectName=spotify-luizalabs
+            -Dsonar.projectVersion=1.0
+            -Dsonar.branch.name=main
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
