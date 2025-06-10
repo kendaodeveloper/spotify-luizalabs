@@ -19,9 +19,7 @@ const Login: React.FC = () => {
     const redirectUri = `${process.env.REACT_APP_URI}/callback`;
 
     if (!clientId || !redirectUri) {
-      console.error(
-        'Client ID or Redirect URI not configured in .env file',
-      );
+      console.error('Client ID or Redirect URI not configured!');
       return;
     }
 
@@ -39,6 +37,7 @@ const Login: React.FC = () => {
       code_challenge_method: 'S256',
       code_challenge: codeChallenge,
       redirect_uri: redirectUri,
+      state: clientId,
     };
 
     authUrl.search = new URLSearchParams(params).toString();

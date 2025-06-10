@@ -1,95 +1,76 @@
-# spotify-luizalabs
+# Spotify App - Teste Técnico
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Aplicação em ReactJS que consome as APIs do Spotify.
 
-## Creating a new project
+---
 
-```
-npx create-react-app spotify-luizalabs
-```
+## Validar a aplicação
 
-## Spotify App Setup
+Para testar a aplicação já publicada, você precisa usar o seu próprio **Client ID** do Spotify. Para isso, siga os seguintes passos:
 
-Before running the app, you need to register it on the Spotify Developer Dashboard and configure your environment variables.
+1.  Acesse o [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) com o seu login e crie um novo app.
+2.  Dê um nome e uma descrição para o seu app.
+3.  Adicione a seguinte **Redirect URI**:
+    ```
+    https://spotify-luizalabs-eight.vercel.app/callback
+    ```
+4.  Seleciona a opção de utilizar as **Web APIs** do Spotify.
+5.  Copie o seu **Client ID** e salve as configurações do seu app.
+6.  Acesse a URL abaixo, substituindo `SEU_CLIENT_ID` pelo ID que você copiou:
+    ```
+    https://spotify-luizalabs-eight.vercel.app/login?client_id=SEU_CLIENT_ID
+    ```
+7. Pronto! Dessa forma a aplicação vai funcionar corretamente.
 
-1. Go to the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
-2. Log in with your Spotify account.
-3. Click **Create an App** and fill in the required details.
-4. In the app settings, add the following **Redirect URI** (callback URL): http://127.0.0.1:3000/callback
-5. Save your changes.
-6. Copy the **Client ID** from the dashboard.
-7. Add the following line to the `.env` file: **REACT_APP_CLIENT_ID=value**.
+---
 
-## Available Scripts
+## Ambiente Local
 
-In the project directory, you can run:
+Siga os passos abaixo para rodar o projeto em sua máquina.
 
-### `npm install`
+### 1. Cadastro no Spotify Developer
 
-Before running any scripts, install the project dependencies.\
-This command downloads and installs all required packages listed in package.json.
+* Da mesma forma que foi cadastrado um app pra ser utilizado no site publicado, cadastre um novo app (ou reutilize o que foi criado) para ser utilizado no ambiente local, setando o valor de **Redirect URI** para `http://127.0.0.1:3000/callback`.
 
-### `npm start`
+### 2. Configuração do Ambiente
 
-Runs the app in the development mode.\
-Open [http://127.0.0.1:3000](http://127.0.0.1:3000) to view it in your browser.
+* Clone este repositório.
+* Altere o arquivo `.env` setando o seu Client ID:
+    ```
+    REACT_APP_CLIENT_ID=COLE_SEU_CLIENT_ID_AQUI
+    ```
+* PS: O Client ID também pode ser passado via parâmetro de URL, conforme foi feito no site publicado.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 3. Rodando o Projeto
 
-**Important:** Use `127.0.0.1` instead of `localhost`, because `127.0.0.1` is the callback address registered in the Spotify Developer Dashboard. Using `localhost` will cause issues with OAuth redirects and storage access.
+* Instale as dependências:
+    ```sh
+    npm install
+    ```
+* Inicie o servidor de desenvolvimento:
+    ```sh
+    npm start
+    ```
+* Abra [http://127.0.0.1:3000](http://127.0.0.1:3000) no seu navegador.
 
-### `npm test`
+**Importante**: Use sempre `127.0.0.1` ao invés de `localhost`, pois este foi o endereço registrado como Redirect URI no Spotify para o ambiente de desenvolvimento.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+---
 
-### `npm run build`
+## Outros Scripts Disponíveis
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* `npm test`: Executa os testes unitários.
+* `npm run build`: Compila a aplicação para produção na pasta `build`.
+* `npx serve -s build`: Roda a aplicação após a compilação.
+* `npm run lint`: Analisa o código em busca de erros de estilo e potenciais problemas.
+* `npm run lint:fix`: Tenta corrigir automaticamente os problemas encontrados pelo linter.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+---
 
-You can run the app after compilation using the following command: `npx serve -s build`.
-
-Deployment guide: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run lint`
-
-Runs ESLint to analyze all files in the project for code style errors and potential issues.
-
-It's useful for checking code quality before committing to the repository.
-
-### `npm run lint:fix`
-
-Runs ESLint in the same way as npm run lint, but also attempts to automatically fix any issues that are fixable.
-
-It's a quick way to align the code with the style rules defined for the project.
-
-### Live App
-
-Link: https://spotify-luizalabs-eight.vercel.app/login
-
-Note: Since it's not possible to set environment variables in a deployed app per user, you must provide your Spotify Client ID as a URL parameter when accessing the app:
-
-```
-https://spotify-luizalabs-eight.vercel.app/login?client_id=YOUR_CLIENT_ID
-```
-Replace YOUR_CLIENT_ID with the Client ID you obtained from the [Spotify Developer Dashboard](https://developer.spotify.com/dashboard).
-
-PS: The Redirect URI must be: `https://spotify-luizalabs-eight.vercel.app/callback`.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-## Requisitos
+## Requisitos do Desafio
 
 ### Requisitos obrigatórios
+
 - [X] Seguimentação de commits
 - [X] Lint
 - [X] Autenticação via Spotify
@@ -101,9 +82,14 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - [X] Deploy da aplicação
 
 ### Bônus
+
 - [ ] Testes E2E
 - [ ] Integração com Sentry
 - [X] CI/CD
 - [X] Responsividade (celular e tablet)
 - [ ] Qualidade de código (Sonarqube)
 - [X] PWA
+
+## Autor
+
+Projeto desenvolvido por Kenneth Gottschalk de Azevedo.

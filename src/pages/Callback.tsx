@@ -16,12 +16,12 @@ const Callback: React.FC = () => {
     const code = searchParams.get('code');
     const codeVerifier = window.sessionStorage.getItem('code_verifier');
     const error = searchParams.get('error');
+    const stateAsClientId = searchParams.get('state');
 
     cleanStorageAndToken();
 
     if (code && codeVerifier) {
-      const clientId =
-        searchParams.get('client_id') || process.env.REACT_APP_CLIENT_ID;
+      const clientId = stateAsClientId || process.env.REACT_APP_CLIENT_ID;
       const redirectUri = `${process.env.REACT_APP_URI}/callback`;
 
       const params = new URLSearchParams();
