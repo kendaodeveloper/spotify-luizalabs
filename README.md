@@ -57,11 +57,11 @@ Siga os passos abaixo para rodar o projeto em sua máquina.
 
 ---
 
-## Outros Scripts Disponíveis
+## Outros Scripts
 
 * `npm test`: Executa os testes unitários.
 * `npm run build`: Compila a aplicação para produção na pasta `build`.
-* `npx serve -s build`: Roda a aplicação após a compilação.
+* `npx serve -s build`: Roda a aplicação considerando a compilação.
 * `npm run lint`: Analisa o código em busca de erros de estilo e potenciais problemas.
 * `npm run lint:fix`: Tenta corrigir automaticamente os problemas encontrados pelo linter.
 
@@ -84,11 +84,13 @@ Siga os passos abaixo para rodar o projeto em sua máquina.
 ### Bônus
 
 - [ ] Testes E2E
-- [ ] Integração com Sentry
+- [X] Integração com Sentry
 - [X] CI/CD
 - [X] Responsividade (celular e tablet)
 - [ ] Qualidade de código (Sonarqube)
 - [X] PWA
+
+---
 
 ## Autor
 
