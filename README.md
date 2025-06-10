@@ -79,7 +79,7 @@ Siga os passos abaixo para rodar o projeto em sua máquina.
 - [X] Utilizar paginação (scroll infinito ou não)
 - [X] Funcionamento offline
 - [X] Testes unitários
-- [X] Deploy da aplicação
+- [X] Deploy da aplicação (automático via [Vercel](https://vercel.com/kendaodevelopers-projects/spotify-luizalabs))
 
 ### Bônus
 
@@ -87,7 +87,7 @@ Siga os passos abaixo para rodar o projeto em sua máquina.
 - [X] Integração com Sentry
 - [X] CI/CD
 - [X] Responsividade (celular e tablet)
-- [X] Qualidade de código ([Sonarqube](https://sonarcloud.io/project/overview?id=kendaodeveloper_spotify-luizalabs))
+- [X] Qualidade de código (automático via [SonarQube](https://sonarcloud.io/project/overview?id=kendaodeveloper_spotify-luizalabs))
 - [X] PWA
 
 ---
