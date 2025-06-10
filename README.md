@@ -87,7 +87,7 @@ Siga os passos abaixo para rodar o projeto em sua máquina.
 - [X] Integração com Sentry
 - [X] CI/CD
 - [X] Responsividade (celular e tablet)
-- [ ] Qualidade de código (Sonarqube)
+- [X] Qualidade de código ([Sonarqube](https://sonarcloud.io/code?id=kendaodeveloper_spotify-luizalabs))
 - [X] PWA
 
 ---
