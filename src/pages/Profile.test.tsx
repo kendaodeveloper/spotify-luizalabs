@@ -8,6 +8,7 @@ import { MemoryRouter } from 'react-router';
 import Profile from './Profile';
 import { useAuth } from '../context/AuthContext';
 import { getUserProfile } from '../api/Spotify.api';
+import { AuthError } from '../api/Spotify.dto';
 
 jest.mock('../context/AuthContext');
 jest.mock('../api/Spotify.api');
@@ -20,9 +21,16 @@ const mockUserData = {
   images: [{ url: 'profile.jpg' }],
 };
 
-describe('Profile', () => {
+describe('Profile Page', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
+
   it('should render loading state initially', () => {
-    mockUseAuth.mockReturnValue({ token: 'fake-token' });
+    mockUseAuth.mockReturnValue({
+      token: 'fake-token',
+      logout: jest.fn(),
+    });
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     mockGetUserProfile.mockReturnValue(new Promise(() => {}));
 
@@ -31,11 +39,11 @@ describe('Profile', () => {
   });
 
   it('should fetch and display user profile', async () => {
-    mockUseAuth.mockReturnValue({ token: 'fake-token' });
-    mockGetUserProfile.mockResolvedValue({
-      status: 200,
-      json: () => Promise.resolve(mockUserData),
+    mockUseAuth.mockReturnValue({
+      token: 'fake-token',
+      logout: jest.fn(),
     });
+    mockGetUserProfile.mockResolvedValue(mockUserData);
 
     render(<Profile />, { wrapper: MemoryRouter });
 
@@ -56,37 +64,52 @@ describe('Profile', () => {
       token: 'fake-token',
       logout: logoutMock,
     });
-    mockGetUserProfile.mockResolvedValue({
-      status: 200,
-      json: () => Promise.resolve(mockUserData),
-    });
+    mockGetUserProfile.mockResolvedValue(mockUserData);
 
     render(<Profile />, { wrapper: MemoryRouter });
 
-    await waitFor(() =>
-      expect(
-        screen.getByRole('button', { name: /Sair/i }),
-      ).toBeInTheDocument(),
-    );
-
-    const logoutButton = screen.getByRole('button', { name: /Sair/i });
+    const logoutButton = await screen.findByRole('button', {
+      name: /Sair/i,
+    });
     fireEvent.click(logoutButton);
 
     expect(logoutMock).toHaveBeenCalledTimes(1);
   });
 
   it('should render a placeholder if user has no image', async () => {
-    mockUseAuth.mockReturnValue({ token: 'fake-token' });
-    const userWithoutImage = { ...mockUserData, images: [] };
-    mockGetUserProfile.mockResolvedValue({
-      status: 200,
-      json: () => Promise.resolve(userWithoutImage),
+    mockUseAuth.mockReturnValue({
+      token: 'fake-token',
+      logout: jest.fn(),
     });
+    const userWithoutImage = { ...mockUserData, images: [] };
+    mockGetUserProfile.mockResolvedValue(userWithoutImage);
 
     render(<Profile />, { wrapper: MemoryRouter });
 
     await waitFor(() => {
       expect(screen.getByText('J')).toBeInTheDocument();
     });
+  });
+
+  it('should call logout if fetching profile fails with AuthError', async () => {
+    const logoutMock = jest.fn();
+    mockUseAuth.mockReturnValue({
+      token: 'fake-token',
+      logout: logoutMock,
+    });
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      .mockImplementation(() => {});
+
+    mockGetUserProfile.mockRejectedValue(new AuthError('Token expirado'));
+
+    render(<Profile />, { wrapper: MemoryRouter });
+
+    await waitFor(() => {
+      expect(logoutMock).toHaveBeenCalledTimes(1);
+    });
+
+    consoleErrorSpy.mockRestore();
   });
 });

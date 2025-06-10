@@ -1,3 +1,11 @@
+export interface PaginatedResponse<T> {
+  items: T[];
+  limit: number;
+  offset: number;
+  total: number;
+  next: string | null;
+}
+
 interface ImageObject {
   url: string;
   height: number;
@@ -33,10 +41,17 @@ export interface Playlist {
   };
 }
 
-export interface SpotifyTokenResponse {
+export interface TokenResponse {
   access_token: string;
   token_type: string;
   expires_in: number;
   refresh_token: string;
   scope: string;
+}
+
+export class AuthError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AuthError';
+  }
 }

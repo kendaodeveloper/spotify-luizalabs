@@ -5,7 +5,7 @@ import { getArtistAlbums } from '../api/Spotify.api';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import Loading from '../components/Loading';
 import Card from '../components/Card';
-import { Album } from '../api/Spotify.dto';
+import { Album, PaginatedResponse } from '../api/Spotify.dto';
 
 interface ArtistLocationState {
   artistName: string;
@@ -21,11 +21,19 @@ const ArtistAlbums: React.FC = () => {
   const artistImage = state?.artistImage;
 
   const fetchAlbumsFn = useCallback(
-    (token: string, limit: number, offset: number) => {
+    (
+      token: string,
+      limit: number,
+      offset: number,
+    ): Promise<PaginatedResponse<Album>> => {
       if (!artistId) {
-        return Promise.resolve(
-          new Response(JSON.stringify({ items: [], next: null })),
-        );
+        return Promise.resolve({
+          items: [],
+          limit,
+          offset,
+          total: 0,
+          next: null,
+        });
       }
       return getArtistAlbums(token, artistId, limit, offset);
     },

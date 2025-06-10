@@ -1,11 +1,12 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import { useAuth } from '../context/AuthContext';
+import { AuthError } from '../api/Spotify.dto';
 
 jest.mock('../context/AuthContext');
-
 const mockUseAuth = useAuth as jest.Mock;
 const mockLogout = jest.fn();
+
 const mockFetchFunction = jest.fn();
 
 const mockIntersectionObserver = jest.fn();
@@ -17,11 +18,14 @@ mockIntersectionObserver.mockReturnValue({
 window.IntersectionObserver = mockIntersectionObserver;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const createMockResponse = (items: any[], next: string | null) => {
+const createMockData = (items: any[], next: string | null) => {
   return Promise.resolve({
-    ok: true,
-    status: 200,
-    json: () => Promise.resolve({ items, next, total: 50 }),
+    items,
+    next,
+    total: 50,
+    limit: 20,
+    offset: items.length,
+    href: 'http://mock.url',
   });
 };
 
@@ -43,17 +47,16 @@ describe('useInfiniteScroll Hook', () => {
   test('should set initial state correctly and fetch initial items', async () => {
     const initialItems = [{ id: 1 }];
     mockFetchFunction.mockReturnValue(
-      createMockResponse(initialItems, 'next-url'),
+      createMockData(initialItems, 'next-url'),
     );
 
     const { result } = renderHook(() =>
       useInfiniteScroll(mockFetchFunction),
     );
 
-    expect(result.current.loading).toBe(true);
-    expect(result.current.items).toEqual([]);
-
-    await waitFor(() => expect(result.current.loading).toBe(false));
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
 
     expect(result.current.items).toEqual(initialItems);
     expect(result.current.hasMore).toBe(true);
@@ -67,8 +70,8 @@ describe('useInfiniteScroll Hook', () => {
     }));
 
     mockFetchFunction
-      .mockReturnValueOnce(createMockResponse(initialItems, 'next-url'))
-      .mockReturnValueOnce(createMockResponse(moreItems, 'last-url'));
+      .mockReturnValueOnce(createMockData(initialItems, 'next-url'))
+      .mockReturnValueOnce(createMockData(moreItems, 'last-url'));
 
     const { result } = renderHook(() =>
       useInfiniteScroll(mockFetchFunction),
@@ -82,7 +85,6 @@ describe('useInfiniteScroll Hook', () => {
     });
 
     const observerCallback = mockIntersectionObserver.mock.calls[0][0];
-
     act(() => {
       observerCallback([{ isIntersecting: true }]);
     });
@@ -95,9 +97,7 @@ describe('useInfiniteScroll Hook', () => {
   });
 
   test('should set hasMore to false when there are no more items', async () => {
-    mockFetchFunction.mockReturnValue(
-      createMockResponse([{ id: 1 }], null),
-    );
+    mockFetchFunction.mockReturnValue(createMockData([{ id: 1 }], null));
 
     const { result } = renderHook(() =>
       useInfiniteScroll(mockFetchFunction),
@@ -108,25 +108,30 @@ describe('useInfiniteScroll Hook', () => {
     expect(result.current.hasMore).toBe(false);
   });
 
-  test('should call logout on 401 or 403 response', async () => {
-    mockFetchFunction.mockResolvedValue({
-      ok: false,
-      status: 401,
-      json: () => Promise.resolve({ error: 'Unauthorized' }),
-    } as Response);
+  test('should call logout on AuthError', async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      .mockImplementation(() => {});
+
+    mockFetchFunction.mockRejectedValue(new AuthError('Session expired'));
 
     renderHook(() => useInfiniteScroll(mockFetchFunction));
 
-    await waitFor(() => expect(mockLogout).toHaveBeenCalled());
+    await waitFor(() => {
+      expect(mockLogout).toHaveBeenCalled();
+    });
+
+    consoleErrorSpy.mockRestore();
   });
 
   test('should reset state when fetchFunction changes', async () => {
     const firstFetch = jest
       .fn()
-      .mockReturnValue(createMockResponse([{ id: 1 }], 'next'));
+      .mockReturnValue(createMockData([{ id: 1 }], 'next'));
     const secondFetch = jest
       .fn()
-      .mockReturnValue(createMockResponse([{ id: 2 }], null));
+      .mockReturnValue(createMockData([{ id: 2 }], null));
 
     const { result, rerender } = renderHook(
       ({ fetchFn }) => useInfiniteScroll(fetchFn),

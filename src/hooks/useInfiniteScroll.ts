@@ -1,58 +1,59 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
-
-interface SpotifyPaginatedResponse<T> {
-  items: T[];
-  next: string | null;
-  total: number;
-}
+import { AuthError, PaginatedResponse } from '../api/Spotify.dto';
 
 export function useInfiniteScroll<T>(
   fetchFunction: (
     token: string,
     limit: number,
     offset: number,
-  ) => Promise<Response>,
+  ) => Promise<PaginatedResponse<T>>,
 ) {
   const { token, logout } = useAuth();
   const [items, setItems] = useState<T[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const offsetRef = useRef<number>(0);
-  const observer = useRef<IntersectionObserver>(null);
+  const observer = useRef<IntersectionObserver | null>(null);
 
   const LIMIT = 20;
 
-  const loadMoreItems = useCallback(() => {
-    if (!token) return;
-    setLoading(true);
-
-    fetchFunction(token, LIMIT, offsetRef.current)
-      .then((res) => {
-        if (res.status === 401 || res.status === 403) {
-          logout();
-          return null;
-        }
-        return res.json() as Promise<SpotifyPaginatedResponse<T>>;
-      })
-      .then((data) => {
-        if (data) {
-          setItems((prevItems) => [...prevItems, ...data.items]);
-          offsetRef.current += data.items.length;
-          setHasMore(data.next !== null);
-        }
-      })
-      .catch((err) => console.error('Error fetching data:', err))
-      .finally(() => setLoading(false));
-  }, [token, logout, fetchFunction]);
-
-  useEffect(() => {
+  const reset = useCallback(() => {
     setItems([]);
     offsetRef.current = 0;
     setHasMore(true);
+  }, []);
+
+  const loadMoreItems = useCallback(async () => {
+    if (!token || loading) return;
+
     setLoading(true);
-    loadMoreItems();
-  }, [fetchFunction, loadMoreItems]);
+
+    try {
+      const data = await fetchFunction(token, LIMIT, offsetRef.current);
+
+      setItems((prevItems) => [...prevItems, ...data.items]);
+      offsetRef.current += data.items.length;
+      setHasMore(data.next !== null);
+    } catch (e) {
+      console.error('Error fetching data:', e);
+      if (e instanceof AuthError) {
+        logout();
+      }
+    } finally {
+      setLoading(false);
+    }
+  }, [token, loading, fetchFunction, logout]);
+
+  useEffect(() => {
+    reset();
+  }, [fetchFunction, reset]);
+
+  useEffect(() => {
+    if (items.length === 0 && hasMore) {
+      loadMoreItems();
+    }
+  }, [items, hasMore, loadMoreItems]);
 
   const loaderRef = useCallback(
     (node: HTMLElement | null) => {
@@ -70,5 +71,5 @@ export function useInfiniteScroll<T>(
     [loading, hasMore, loadMoreItems],
   );
 
-  return { items, loading, hasMore, loaderRef };
+  return { items, loading, hasMore, loaderRef, reset };
 }

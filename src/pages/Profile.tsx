@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { getUserProfile } from '../api/Spotify.api';
 import Loading from '../components/Loading';
 import Button from '../components/Button';
-import { User } from '../api/Spotify.dto';
+import { AuthError, User } from '../api/Spotify.dto';
 
 const Profile: React.FC = () => {
   const { token, logout } = useAuth();
@@ -12,16 +12,23 @@ const Profile: React.FC = () => {
   useEffect(() => {
     if (!token) return;
 
-    getUserProfile(token)
-      .then((res) => {
-        if (res.status === 401 || res.status === 403) {
+    const fetchUserData = async () => {
+      if (!token) return;
+
+      try {
+        const userData = await getUserProfile(token);
+
+        setUser(userData);
+      } catch (e) {
+        console.error('Error fetching user profile:', e);
+
+        if (e instanceof AuthError) {
           logout();
-          return null;
         }
-        return res.json();
-      })
-      .then((data) => setUser(data))
-      .catch((err) => console.error('Error fetching user profile:', err));
+      }
+    };
+
+    fetchUserData();
   }, [token, logout]);
 
   if (!user) {

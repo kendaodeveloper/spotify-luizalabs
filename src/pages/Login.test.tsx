@@ -12,7 +12,7 @@ jest.mock('../utils/PKCE', () => ({
 
 const mockUseAuth = useAuth as jest.Mock;
 
-describe('Login', () => {
+describe('Login Page', () => {
   let cleanStorageMock: jest.Mock;
   let locationMock: Location;
 

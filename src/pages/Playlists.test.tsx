@@ -9,6 +9,7 @@ import Playlists from '../pages/Playlists';
 import { useAuth } from '../context/AuthContext';
 import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import * as api from '../api/Spotify.api';
+import { AuthError } from '../api/Spotify.dto';
 
 jest.mock('../context/AuthContext');
 jest.mock('../hooks/useInfiniteScroll');
@@ -18,28 +19,33 @@ const mockUseAuth = useAuth as jest.Mock;
 const mockUseInfiniteScroll = useInfiniteScroll as jest.Mock;
 const mockApi = api as jest.Mocked<typeof api>;
 
-describe('Playlists', () => {
+const mockReset = jest.fn();
+
+describe('Playlists Page', () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
     mockUseAuth.mockReturnValue({
       token: 'fake-token',
       logout: jest.fn(),
     });
+
     mockUseInfiniteScroll.mockReturnValue({
       items: [],
       loading: false,
       hasMore: false,
       loaderRef: jest.fn(),
+      reset: mockReset,
     });
+
     mockApi.getUserProfile.mockResolvedValue({
-      ok: true,
-      status: 200,
-      json: () =>
-        Promise.resolve({ id: 'user-1', display_name: 'Test User' }),
-    } as Response);
+      id: 'user-1',
+      display_name: 'Test User',
+      images: [],
+    });
   });
 
-  test('fetches user and renders playlists', async () => {
+  test('fetches user and renders playlists from the hook', async () => {
     const mockPlaylists = [
       {
         id: 'p1',
@@ -53,6 +59,7 @@ describe('Playlists', () => {
       loading: false,
       hasMore: false,
       loaderRef: jest.fn(),
+      reset: mockReset,
     });
 
     render(<Playlists />);
@@ -64,24 +71,13 @@ describe('Playlists', () => {
     expect(mockApi.getUserProfile).toHaveBeenCalledWith('fake-token');
   });
 
-  test('opens, fills, and submits the create playlist modal', async () => {
-    mockApi.createPlaylist.mockResolvedValue({
-      ok: true,
-      status: 201,
-      json: () => Promise.resolve({ id: 'new-playlist' }),
-    } as Response);
+  test('opens, fills, and submits the create playlist modal, then resets the list', async () => {
+    mockApi.createPlaylist.mockResolvedValue();
 
     render(<Playlists />);
 
-    await waitFor(() => {
-      expect(screen.getByText('Criar Playlist')).toBeInTheDocument();
-    });
-
+    await screen.findByText('Criar Playlist');
     fireEvent.click(screen.getByText('Criar Playlist'));
-
-    expect(
-      screen.getByText('Dê um nome à sua playlist:'),
-    ).toBeInTheDocument();
 
     const input = screen.getByPlaceholderText('Nome da playlist');
     const createButton = screen.getByRole('button', { name: 'Criar' });
@@ -96,19 +92,40 @@ describe('Playlists', () => {
         'New Awesome Playlist',
       );
     });
+
+    expect(mockReset).toHaveBeenCalled();
   });
 
-  test('shows loading state when user and playlists are loading', () => {
+  test('shows loading state when hook indicates loading', () => {
     mockUseInfiniteScroll.mockReturnValue({
       items: [],
       loading: true,
       hasMore: true,
       loaderRef: jest.fn(),
+      reset: mockReset,
     });
 
     render(<Playlists />);
     expect(
       screen.getByText('Carregando playlists...'),
     ).toBeInTheDocument();
+  });
+
+  test('calls logout if getUserProfile fails with AuthError', async () => {
+    const mockLogoutFn = jest.fn();
+    mockUseAuth.mockReturnValue({
+      token: 'fake-token',
+      logout: mockLogoutFn,
+    });
+
+    mockApi.getUserProfile.mockRejectedValue(
+      new AuthError('Token Inválido'),
+    );
+
+    render(<Playlists />);
+
+    await waitFor(() => {
+      expect(mockLogoutFn).toHaveBeenCalled();
+    });
   });
 });

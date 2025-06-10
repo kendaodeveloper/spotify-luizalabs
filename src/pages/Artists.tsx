@@ -5,11 +5,15 @@ import { useInfiniteScroll } from '../hooks/useInfiniteScroll';
 import Loading from '../components/Loading';
 import SectionHeader from '../components/SectionHeader';
 import Card from '../components/Card';
-import { Artist } from '../api/Spotify.dto';
+import { Artist, PaginatedResponse } from '../api/Spotify.dto';
 
 const Artists: React.FC = () => {
   const fetchArtistsFn = useCallback(
-    (authToken: string, limit: number, offset: number) => {
+    (
+      authToken: string,
+      limit: number,
+      offset: number,
+    ): Promise<PaginatedResponse<Artist>> => {
       return getTopArtists(authToken, limit, offset);
     },
     [],

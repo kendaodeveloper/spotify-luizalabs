@@ -25,7 +25,9 @@ const Login: React.FC = () => {
 
     const codeVerifier = generateRandomString(128);
     window.sessionStorage.setItem('code_verifier', codeVerifier);
+
     const codeChallenge = await generateCodeChallenge(codeVerifier);
+
     const scope =
       'user-read-private user-read-email user-top-read playlist-read-private playlist-modify-public playlist-modify-private';
     const authUrl = new URL('https://accounts.spotify.com/authorize');

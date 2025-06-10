@@ -16,7 +16,7 @@ jest.mock('react-router', () => ({
 
 const mockUseInfiniteScroll = useInfiniteScroll as jest.Mock;
 
-describe('Artists', () => {
+describe('Artists Page', () => {
   test('displays loading state initially', () => {
     mockUseInfiniteScroll.mockReturnValue({
       items: [],

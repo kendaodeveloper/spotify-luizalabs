@@ -2,11 +2,15 @@ import { render, waitFor } from '@testing-library/react';
 import { MemoryRouter } from 'react-router';
 import { useAuth } from '../context/AuthContext';
 import Callback from './Callback';
+import { getAccessToken } from '../api/Spotify.api';
 
 jest.mock('../context/AuthContext');
-const mockUseAuth = useAuth as jest.Mock;
+jest.mock('../api/Spotify.api');
 
-describe('Callback', () => {
+const mockUseAuth = useAuth as jest.Mock;
+const mockGetAccessToken = getAccessToken as jest.Mock;
+
+describe('Callback Page', () => {
   let loginMock: jest.Mock;
   let logoutMock: jest.Mock;
   let cleanStorageAndTokenMock: jest.Mock;
@@ -38,8 +42,6 @@ describe('Callback', () => {
       value: sessionStorageMock,
       writable: true,
     });
-
-    global.fetch = jest.fn();
   });
 
   afterEach(() => {
@@ -58,7 +60,7 @@ describe('Callback', () => {
 
     expect(loginMock).not.toHaveBeenCalled();
     expect(logoutMock).not.toHaveBeenCalled();
-    expect(fetch).not.toHaveBeenCalled();
+    expect(mockGetAccessToken).not.toHaveBeenCalled();
     expect(cleanStorageAndTokenMock).not.toHaveBeenCalled();
   });
 
@@ -70,22 +72,24 @@ describe('Callback', () => {
       cleanStorageAndToken: cleanStorageAndTokenMock,
     });
     window.sessionStorage.setItem('code_verifier', 'test_verifier');
-    (global.fetch as jest.Mock).mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve({ access_token: 'new-spotify-token' }),
+    mockGetAccessToken.mockResolvedValue({
+      access_token: 'new-spotify-token',
     });
 
     render(
-      <MemoryRouter initialEntries={['/callback?code=test_code']}>
+      <MemoryRouter
+        initialEntries={['/callback?code=test_code&state=mock-client-id']}
+      >
         <Callback />
       </MemoryRouter>,
     );
 
     await waitFor(() => {
       expect(cleanStorageAndTokenMock).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledWith(
-        'https://accounts.spotify.com/api/token',
-        expect.any(Object),
+      expect(mockGetAccessToken).toHaveBeenCalledWith(
+        'mock-client-id',
+        'test_code',
+        'test_verifier',
       );
       expect(loginMock).toHaveBeenCalledWith('new-spotify-token');
       expect(logoutMock).not.toHaveBeenCalled();
@@ -100,7 +104,7 @@ describe('Callback', () => {
       cleanStorageAndToken: cleanStorageAndTokenMock,
     });
     window.sessionStorage.setItem('code_verifier', 'test_verifier');
-    (global.fetch as jest.Mock).mockResolvedValue({ ok: false });
+    mockGetAccessToken.mockRejectedValue(new Error('API request failed'));
 
     render(
       <MemoryRouter initialEntries={['/callback?code=test_code']}>
@@ -110,7 +114,7 @@ describe('Callback', () => {
 
     await waitFor(() => {
       expect(cleanStorageAndTokenMock).toHaveBeenCalledTimes(1);
-      expect(fetch).toHaveBeenCalledTimes(1);
+      expect(mockGetAccessToken).toHaveBeenCalledTimes(1);
       expect(loginMock).not.toHaveBeenCalled();
       expect(logoutMock).toHaveBeenCalledTimes(1);
     });
@@ -132,7 +136,7 @@ describe('Callback', () => {
 
     await waitFor(() => {
       expect(cleanStorageAndTokenMock).toHaveBeenCalledTimes(1);
-      expect(fetch).not.toHaveBeenCalled();
+      expect(mockGetAccessToken).not.toHaveBeenCalled();
       expect(logoutMock).toHaveBeenCalledTimes(1);
     });
   });
@@ -155,7 +159,7 @@ describe('Callback', () => {
     await waitFor(() => {
       expect(cleanStorageAndTokenMock).toHaveBeenCalledTimes(1);
       expect(logoutMock).toHaveBeenCalledTimes(1);
-      expect(fetch).not.toHaveBeenCalled();
+      expect(mockGetAccessToken).not.toHaveBeenCalled();
     });
   });
 });

@@ -11,7 +11,7 @@ import Button from '../components/Button';
 import Modal from '../components/Modal';
 import SectionHeader from '../components/SectionHeader';
 import Card from '../components/Card';
-import { Playlist, User } from '../api/Spotify.dto';
+import { AuthError, Playlist, User } from '../api/Spotify.dto';
 
 const Playlists: React.FC = () => {
   const { token, logout } = useAuth();
@@ -31,34 +31,40 @@ const Playlists: React.FC = () => {
     loading,
     hasMore,
     loaderRef,
+    reset,
   } = useInfiniteScroll<Playlist>(fetchPlaylistsFn);
 
   useEffect(() => {
-    if (!token) return;
-    getUserProfile(token)
-      .then((res) => {
-        if (res.status === 401 || res.status === 403) {
+    const fetchUserData = async () => {
+      if (!token) return;
+
+      try {
+        const userData = await getUserProfile(token);
+        setUser(userData);
+      } catch (e) {
+        console.error('Error fetching user:', e);
+
+        if (e instanceof AuthError) {
           logout();
-          return null;
         }
-        return res.json();
-      })
-      .then((data) => setUser(data))
-      .catch((err) => console.error('Error fetching user:', err));
+      }
+    };
+
+    fetchUserData();
   }, [token, logout]);
 
-  const handleCreatePlaylist = () => {
+  const handleCreatePlaylist = async () => {
     if (!token || !user?.id || !newPlaylistName.trim()) return;
-    createPlaylist(token, user.id, newPlaylistName)
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed creating playlist');
-        return res.json();
-      })
-      .then(() => {
-        setShowDialog(false);
-        setNewPlaylistName('');
-      })
-      .catch((err) => console.error('Error creating playlist:', err));
+
+    try {
+      await createPlaylist(token, user.id, newPlaylistName);
+
+      setShowDialog(false);
+      setNewPlaylistName('');
+      reset();
+    } catch (e) {
+      console.error('Error creating playlist:', e);
+    }
   };
 
   if (!user || (loading && playlists.length === 0)) {
