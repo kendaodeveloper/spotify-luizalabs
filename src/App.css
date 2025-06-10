@@ -454,8 +454,30 @@ body {
   background-color: #1ed760;
 }
 
-/* --- for cellphones --- */
-@media (max-width: 768px) {
+/* -- pwa -- */
+
+.pwa-install-button {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  padding: 12px 20px;
+  background-color: #000000;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+}
+
+.pwa-install-button:hover {
+  background-color: #333333;
+}
+
+/* --- cellphone --- */
+@media (max-width: 680px) {
   .home-layout {
     flex-direction: column;
   }

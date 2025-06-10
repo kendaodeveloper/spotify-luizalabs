@@ -6,7 +6,7 @@ import { SpotifyTokenResponse } from '../api/Spotify.dto';
 
 const Callback: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const { token, login, logout } = useAuth();
+  const { token, login, logout, cleanStorageAndToken } = useAuth();
 
   useEffect(() => {
     if (token) {
@@ -16,6 +16,8 @@ const Callback: React.FC = () => {
     const code = searchParams.get('code');
     const codeVerifier = window.sessionStorage.getItem('code_verifier');
     const error = searchParams.get('error');
+
+    cleanStorageAndToken();
 
     if (code && codeVerifier) {
       const clientId = process.env.REACT_APP_CLIENT_ID;
@@ -57,7 +59,7 @@ const Callback: React.FC = () => {
       }
       logout();
     }
-  }, [searchParams, token, login, logout]);
+  }, [searchParams, token, login, logout, cleanStorageAndToken]);
 
   return <Loading message="Autenticando e redirecionando..." />;
 };

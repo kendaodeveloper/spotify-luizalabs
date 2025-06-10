@@ -93,4 +93,4 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 - [ ] CI/CD
 - [X] Responsividade (celular e tablet)
 - [ ] Qualidade de código (Sonarqube)
-- [ ] PWA
+- [X] PWA
