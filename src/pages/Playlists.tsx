@@ -34,6 +34,7 @@ const Playlists: React.FC = () => {
     hasMore,
     loaderRef,
     reset,
+    error,
   } = useInfiniteScroll<Playlist>(fetchPlaylistsFn);
 
   useEffect(() => {
@@ -69,6 +70,10 @@ const Playlists: React.FC = () => {
     }
   };
 
+  if (error) {
+    return <div>Ocorreu um erro, tente novamente mais tarde.</div>;
+  }
+
   if (!user || (loading && playlists.length === 0)) {
     return <Loading message="Carregando playlists..." />;
   }
@@ -82,6 +87,11 @@ const Playlists: React.FC = () => {
         />
         <Button onClick={() => setShowDialog(true)}>Criar Playlist</Button>
       </div>
+
+      {!loading && playlists.length === 0 && (
+        <div>Nenhuma playlist encontrada.</div>
+      )}
+
       <div className="card-container">
         {playlists.map((playlist) => (
           <Card

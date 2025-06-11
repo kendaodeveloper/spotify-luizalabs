@@ -10,9 +10,11 @@ import { AuthError, User } from '../api/Spotify.dto';
 const Profile: React.FC = () => {
   const { token, logout } = useAuth();
   const [user, setUser] = useState<User | null>(null);
+  const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    if (!token) return;
+    setUser(null);
+    setError(null);
 
     const fetchUserData = async () => {
       if (!token) return;
@@ -26,12 +28,18 @@ const Profile: React.FC = () => {
 
         if (e instanceof AuthError) {
           logout();
+        } else {
+          setError(e as Error);
         }
       }
     };
 
     fetchUserData();
   }, [token, logout]);
+
+  if (error) {
+    return <div>Ocorreu um erro, tente novamente mais tarde.</div>;
+  }
 
   if (!user) {
     return <Loading message="Carregando perfil..." />;

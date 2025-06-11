@@ -47,7 +47,12 @@ const ArtistAlbums: React.FC = () => {
     loading,
     hasMore,
     loaderRef,
+    error,
   } = useInfiniteScroll<Album>(fetchAlbumsFn);
+
+  if (error) {
+    return <div>Ocorreu um erro, tente novamente mais tarde.</div>;
+  }
 
   if (loading && albums.length === 0) {
     return <Loading message="Carregando álbuns..." />;

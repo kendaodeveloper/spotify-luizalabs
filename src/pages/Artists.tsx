@@ -26,7 +26,12 @@ const Artists: React.FC = () => {
     loading,
     hasMore,
     loaderRef,
+    error,
   } = useInfiniteScroll<Artist>(fetchArtistsFn);
+
+  if (error) {
+    return <div>Ocorreu um erro, tente novamente mais tarde.</div>;
+  }
 
   if (loading && artists.length === 0) {
     return <Loading message="Carregando artistas..." />;
