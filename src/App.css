@@ -484,7 +484,7 @@ body {
 
   .main-content {
     flex-grow: 1;
-    padding: 1rem;
+    padding: 24px 40px;
     overflow-y: auto;
     padding-bottom: 80px;
   }
