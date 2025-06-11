@@ -45,8 +45,24 @@ if (!workbox) {
     }),
   );
 
-  self.addEventListener('message', (event) => {
-    if (event.data && event.data.type === 'SKIP_WAITING') {
+  self.addEventListener('message', async (event) => {
+    const trustedOrigins = [
+      'http://127.0.0.1',
+      'https://spotify-luizalabs-eight.vercel.app',
+    ];
+
+    const allClients = await clients.matchAll({
+      includeUncontrolled: true,
+    });
+    const sourceClient = allClients.find(
+      (client) => client.id === event.source?.id,
+    );
+
+    const isTrusted =
+      sourceClient?.url &&
+      trustedOrigins.some((origin) => sourceClient.url.startsWith(origin));
+
+    if (isTrusted && event.data && event.data.type === 'SKIP_WAITING') {
       self.skipWaiting();
     }
   });

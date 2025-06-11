@@ -68,7 +68,7 @@ describe('Login Page', () => {
     );
 
     process.env.REACT_APP_CLIENT_ID = 'test-client-id';
-    process.env.REACT_APP_URI = 'http://localhost:3000';
+    process.env.REACT_APP_URI = 'https://localhost:3000';
 
     render(
       <MemoryRouter>
@@ -93,7 +93,7 @@ describe('Login Page', () => {
     );
 
     const expectedUrl =
-      'https://accounts.spotify.com/authorize?response_type=code&client_id=test-client-id&scope=user-read-private+user-read-email+user-top-read+playlist-read-private+playlist-modify-public+playlist-modify-private&code_challenge_method=S256&code_challenge=mock_challenge&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=test-client-id';
+      'https://accounts.spotify.com/authorize?response_type=code&client_id=test-client-id&scope=user-read-private+user-read-email+user-top-read+playlist-read-private+playlist-modify-public+playlist-modify-private&code_challenge_method=S256&code_challenge=mock_challenge&redirect_uri=https%3A%2F%2Flocalhost%3A3000%2Fcallback&state=test-client-id';
     expect(window.location.href).toBe(expectedUrl);
   });
 
@@ -106,7 +106,7 @@ describe('Login Page', () => {
     );
 
     process.env.REACT_APP_CLIENT_ID = 'test-client-id';
-    process.env.REACT_APP_URI = 'http://localhost:3000';
+    process.env.REACT_APP_URI = 'https://localhost:3000';
 
     render(
       <MemoryRouter initialEntries={['/login?client_id=my-param-client']}>
@@ -131,7 +131,7 @@ describe('Login Page', () => {
     );
 
     const expectedUrl =
-      'https://accounts.spotify.com/authorize?response_type=code&client_id=my-param-client&scope=user-read-private+user-read-email+user-top-read+playlist-read-private+playlist-modify-public+playlist-modify-private&code_challenge_method=S256&code_challenge=mock_challenge&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback&state=my-param-client';
+      'https://accounts.spotify.com/authorize?response_type=code&client_id=my-param-client&scope=user-read-private+user-read-email+user-top-read+playlist-read-private+playlist-modify-public+playlist-modify-private&code_challenge_method=S256&code_challenge=mock_challenge&redirect_uri=https%3A%2F%2Flocalhost%3A3000%2Fcallback&state=my-param-client';
     expect(window.location.href).toBe(expectedUrl);
   });
 });

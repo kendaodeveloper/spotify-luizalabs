@@ -25,7 +25,7 @@ const createMockData = (items: any[], next: string | null) => {
     total: 50,
     limit: 20,
     offset: items.length,
-    href: 'http://mock.url',
+    href: 'https://mock.url',
   });
 };
 
