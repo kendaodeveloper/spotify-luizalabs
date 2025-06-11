@@ -1,4 +1,4 @@
-# Spotify App - Teste Técnico
+# spotify-luizalabs
 
 Aplicação em ReactJS que consome as APIs do Spotify.
 
@@ -15,22 +15,25 @@ Para testar a aplicação já publicada, você precisa usar o seu próprio **Cli
     https://spotify-luizalabs-eight.vercel.app/callback
     ```
 4.  Seleciona a opção de utilizar as **Web APIs** do Spotify.
-5.  Copie o seu **Client ID** e salve as configurações do seu app.
+5.  Salve as configurações do seu app e copie o seu **Client ID**.
 6.  Acesse a URL abaixo, substituindo `SEU_CLIENT_ID` pelo ID que você copiou:
     ```
     https://spotify-luizalabs-eight.vercel.app/login?client_id=SEU_CLIENT_ID
     ```
-7. Pronto! Dessa forma a aplicação vai funcionar corretamente.
+7. Pronto! Agora a aplicação vai funcionar corretamente com o login de seu usuário.
 
 ---
 
 ## Ambiente Local
 
-Siga os passos abaixo para rodar o projeto em sua máquina.
+Com o Node.js 18 (ou superior) instalado, siga os passos abaixo para rodar o projeto em sua máquina.
 
 ### 1. Cadastro no Spotify Developer
 
-* Da mesma forma que foi cadastrado um app pra ser utilizado no site publicado, cadastre um novo app (ou reutilize o que foi criado) para ser utilizado no ambiente local, setando o valor de **Redirect URI** para `http://127.0.0.1:3000/callback`.
+* Da mesma forma que foi cadastrado um app pra ser utilizado no site publicado, cadastre um novo app (ou reutilize o que foi criado) para ser utilizado no ambiente local, setando o valor de **Redirect URI** para:
+```
+http://127.0.0.1:3000/callback
+```
 
 ### 2. Configuração do Ambiente
 
@@ -77,7 +80,7 @@ Siga os passos abaixo para rodar o projeto em sua máquina.
 - [X] Listar artistas
 - [X] Listar albuns de um artista
 - [X] Utilizar paginação (scroll infinito ou não)
-- [X] Funcionamento offline
+- [X] Funcionamento offline (testado no Google Chrome)
 - [X] Testes unitários
 - [X] Deploy da aplicação (automático via [Vercel](https://vercel.com/kendaodevelopers-projects/spotify-luizalabs))
 

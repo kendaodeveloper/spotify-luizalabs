@@ -459,7 +459,7 @@ body {
 .pwa-install-button {
   position: fixed;
   bottom: 20px;
-  left: 20px;
+  left: 25px;
   padding: 12px 20px;
   background-color: #000000;
   color: white;
@@ -523,11 +523,17 @@ body {
   }
 
   .sidebar-icon {
-    margin-right: 0;
+    margin-right: 5px;
     font-size: 1.5rem;
   }
 
   .spotify-sidebar {
       display: none;
+  }
+
+  .pwa-install-button {
+    bottom: 80px;
+    left: auto;
+    right: 25px;
   }
 }
