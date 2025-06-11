@@ -33,6 +33,13 @@ describe('ArtistAlbums Page', () => {
         artistImage: 'image-url.jpg',
       },
     });
+    mockUseInfiniteScroll.mockReturnValue({
+      items: [],
+      loading: false,
+      hasMore: false,
+      loaderRef: jest.fn(),
+      error: null,
+    });
   });
 
   test('shows initial loading state', () => {
@@ -114,5 +121,20 @@ describe('ArtistAlbums Page', () => {
 
     render(<ArtistAlbums />);
     expect(screen.getByText('Artista')).toBeInTheDocument();
+  });
+
+  test('shows error message when hook returns an error', () => {
+    mockUseInfiniteScroll.mockReturnValue({
+      items: [],
+      loading: false,
+      hasMore: false,
+      loaderRef: jest.fn(),
+      error: new Error('Failed to fetch'),
+    });
+
+    render(<ArtistAlbums />);
+    expect(
+      screen.getByText('Ocorreu um erro, tente novamente mais tarde.'),
+    ).toBeInTheDocument();
   });
 });

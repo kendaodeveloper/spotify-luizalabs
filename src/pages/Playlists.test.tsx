@@ -36,6 +36,7 @@ describe('Playlists Page', () => {
       hasMore: false,
       loaderRef: jest.fn(),
       reset: mockReset,
+      error: null,
     });
 
     mockApi.getUserProfile.mockResolvedValue({
@@ -127,5 +128,26 @@ describe('Playlists Page', () => {
     await waitFor(() => {
       expect(mockLogoutFn).toHaveBeenCalled();
     });
+  });
+
+  test('shows an error message if useInfiniteScroll returns an error', async () => {
+    mockUseInfiniteScroll.mockReturnValue({
+      items: [],
+      loading: false,
+      hasMore: false,
+      loaderRef: jest.fn(),
+      reset: mockReset,
+      error: new Error('Failed to load playlists'),
+    });
+
+    render(<Playlists />);
+
+    await waitFor(() => {
+      expect(mockApi.getUserProfile).toHaveBeenCalled();
+    });
+
+    expect(
+      screen.getByText('Ocorreu um erro, tente novamente mais tarde.'),
+    ).toBeInTheDocument();
   });
 });

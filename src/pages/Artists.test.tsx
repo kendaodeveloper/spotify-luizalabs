@@ -17,6 +17,16 @@ jest.mock('react-router', () => ({
 const mockUseInfiniteScroll = useInfiniteScroll as jest.Mock;
 
 describe('Artists Page', () => {
+  beforeEach(() => {
+    mockUseInfiniteScroll.mockReturnValue({
+      items: [],
+      loading: false,
+      hasMore: false,
+      loaderRef: jest.fn(),
+      error: null,
+    });
+  });
+
   test('displays loading state initially', () => {
     mockUseInfiniteScroll.mockReturnValue({
       items: [],
@@ -76,5 +86,20 @@ describe('Artists Page', () => {
     render(<Artists />);
     expect(screen.getByText('Artist One')).toBeInTheDocument();
     expect(screen.getByText('Carregando mais...')).toBeInTheDocument();
+  });
+
+  test('shows an error message on fetch failure', () => {
+    mockUseInfiniteScroll.mockReturnValue({
+      items: [],
+      loading: false,
+      hasMore: false,
+      loaderRef: jest.fn(),
+      error: new Error('API Error'),
+    });
+
+    render(<Artists />);
+    expect(
+      screen.getByText('Ocorreu um erro, tente novamente mais tarde.'),
+    ).toBeInTheDocument();
   });
 });

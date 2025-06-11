@@ -112,4 +112,27 @@ describe('Profile Page', () => {
 
     consoleErrorSpy.mockRestore();
   });
+
+  it('should display a generic error message if fetching fails with a non-auth error', async () => {
+    mockUseAuth.mockReturnValue({
+      token: 'fake-token',
+      logout: jest.fn(),
+    });
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      .mockImplementation(() => {});
+
+    mockGetUserProfile.mockRejectedValue(new Error('Network Error'));
+
+    render(<Profile />, { wrapper: MemoryRouter });
+
+    await waitFor(() => {
+      expect(
+        screen.getByText('Ocorreu um erro, tente novamente mais tarde.'),
+      ).toBeInTheDocument();
+    });
+
+    consoleErrorSpy.mockRestore();
+  });
 });
