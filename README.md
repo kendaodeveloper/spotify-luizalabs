@@ -1,6 +1,39 @@
 # spotify-luizalabs
 
-Aplicação em ReactJS que consome as APIs do Spotify.
+Aplicação em ReactJS que autentica e realiza buscas nas APIs do Spotify.
+
+---
+
+## Escolhas Técnicas e Arquiteturais
+
+Essa aplicação foi desenvolvida com foco em simplicidade, escalabilidade e boas práticas modernas de desenvolvimento front-end.
+
+### Tecnologias e bibliotecas utilizadas
+
+- React 19: Biblioteca principal para construção da interface.
+- React Router: Navegação baseada em rotas SPA.
+- TypeScript: Tipagem estática para maior confiabilidade e manutenibilidade do código.
+- Jest + React Testing Library: Testes unitários do funcionamento dos componentes.
+- ESLint + Prettier: Padronização de código e detecção de problemas de estilo.
+- SonarCloud: Análise estática contínua do código, garantindo qualidade e segurança.
+- Sentry: Monitoramento de erros em tempo real.
+- Workbox + Service Worker: Implementação de PWA com suporte offline.
+- CI/CD: Execução automática dos testes e deploy contínuo via Vercel.
+
+### Organização e padrões arquiteturais
+
+A arquitetura do projeto foi baseada em separação por domínios de responsabilidade (Separation of Concerns), tornando o código mais modular, testável e de fácil manutenção:
+
+```
+src/
+├── api/              # Comunicação com APIs externas e DTOs
+├── assets/           # Arquivos estáticos (imagens, fontes, etc.)
+├── components/       # Componentes de UI reutilizáveis e desacoplados
+├── context/          # React Context API para estado global
+├── hooks/            # Hooks customizados com lógicas reutilizáveis
+├── pages/            # Páginas da aplicação ligadas às rotas
+├── utils/            # Utilitários e funções auxiliares
+```
 
 ---
 
