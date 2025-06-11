@@ -6,7 +6,7 @@ Aplicação em ReactJS que autentica e realiza buscas nas APIs do Spotify.
 
 ## Escolhas Técnicas e Arquiteturais
 
-Essa aplicação foi desenvolvida com foco em simplicidade, escalabilidade e boas práticas modernas de desenvolvimento front-end.
+Essa aplicação foi desenvolvida com foco em simplicidade, escalabilidade e boas práticas de desenvolvimento front-end.
 
 ### Tecnologias e bibliotecas utilizadas
 
@@ -22,7 +22,7 @@ Essa aplicação foi desenvolvida com foco em simplicidade, escalabilidade e boa
 
 ### Organização e padrões arquiteturais
 
-A arquitetura do projeto foi baseada em separação por domínios de responsabilidade (Separation of Concerns), tornando o código mais modular, testável e de fácil manutenção:
+A arquitetura do projeto segue o princípio de separação por domínios de responsabilidade (Separation of Concerns), estruturada da seguinte forma:
 
 ```
 src/
@@ -34,6 +34,10 @@ src/
 ├── pages/            # Páginas da aplicação ligadas às rotas
 ├── utils/            # Utilitários e funções auxiliares
 ```
+
+Essa estrutura foi escolhida por ser fácil de entender, escalar e manter. A separação clara de responsabilidades permite adicionar novos recursos ou modificar comportamentos sem acoplamentos indesejados ou complexidade excessiva.
+
+Além disso, esse padrão facilita a criação de testes unitários, o reaproveitamento de código entre diferentes partes da aplicação e garante que cada camada possa evoluir de forma independente, conforme a aplicação cresce ou muda.
 
 ---
 
