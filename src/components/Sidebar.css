@@ -57,3 +57,47 @@
   height: 50px;
   margin: 10px 0;
 }
+
+@media (max-width: 680px) {
+  .sidebar {
+    min-width: auto;
+    width: 100%;
+    padding: 0;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: #040404;
+    border-top: 1px solid #2a2a2a;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 1000;
+  }
+
+  .sidebar nav {
+    width: 100%;
+  }
+
+  .sidebar nav ul {
+    display: flex;
+    justify-content: space-around;
+    padding: 0;
+    width: 100%;
+  }
+
+  .sidebar nav li {
+    padding: 12px 0;
+  }
+
+  .sidebar nav a span {
+    display: none;
+  }
+
+  .sidebar-icon {
+    margin-right: 5px;
+    font-size: 1.5rem;
+  }
+
+  .spotify-sidebar {
+      display: none;
+  }
+}

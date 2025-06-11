@@ -13,6 +13,7 @@ export function useInfiniteScroll<T>(
   const [items, setItems] = useState<T[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
   const offsetRef = useRef<number>(0);
   const observer = useRef<IntersectionObserver | null>(null);
   const loadingRef = useRef<boolean>(false);
@@ -23,10 +24,11 @@ export function useInfiniteScroll<T>(
     setItems([]);
     offsetRef.current = 0;
     setHasMore(true);
+    setError(null);
   }, []);
 
   const loadMoreItems = useCallback(async () => {
-    if (!token || loadingRef.current) return;
+    if (!token || loadingRef.current || !hasMore) return;
 
     loadingRef.current = true;
     setLoading(true);
@@ -39,6 +41,8 @@ export function useInfiniteScroll<T>(
       setHasMore(data.next !== null);
     } catch (e) {
       console.error('Error fetching data:', e);
+      setError(e as Error);
+      setHasMore(false);
       if (e instanceof AuthError) {
         logout();
       }
@@ -46,17 +50,17 @@ export function useInfiniteScroll<T>(
       loadingRef.current = false;
       setLoading(false);
     }
-  }, [token, fetchFunction, logout]);
+  }, [token, fetchFunction, logout, hasMore]);
 
   useEffect(() => {
     reset();
   }, [fetchFunction, reset]);
 
   useEffect(() => {
-    if (items.length === 0 && hasMore) {
+    if (items.length === 0 && hasMore && !error) {
       loadMoreItems();
     }
-  }, [items, hasMore, loadMoreItems]);
+  }, [items.length, hasMore, error, loadMoreItems]);
 
   const loaderRef = useCallback(
     (node: HTMLElement | null) => {
@@ -74,5 +78,5 @@ export function useInfiniteScroll<T>(
     [loading, hasMore, loadMoreItems],
   );
 
-  return { items, loading, hasMore, loaderRef, reset };
+  return { items, loading, hasMore, error, loaderRef, reset };
 }

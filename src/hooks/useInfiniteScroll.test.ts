@@ -108,18 +108,24 @@ describe('useInfiniteScroll Hook', () => {
     expect(result.current.hasMore).toBe(false);
   });
 
-  test('should call logout on AuthError', async () => {
+  test('should call logout, set error state, and disable hasMore on AuthError', async () => {
     const consoleErrorSpy = jest
       .spyOn(console, 'error')
       // eslint-disable-next-line @typescript-eslint/no-empty-function
       .mockImplementation(() => {});
 
-    mockFetchFunction.mockRejectedValue(new AuthError('Session expired'));
+    const authError = new AuthError('Session expired');
+    mockFetchFunction.mockRejectedValue(authError);
 
-    renderHook(() => useInfiniteScroll(mockFetchFunction));
+    const { result } = renderHook(() =>
+      useInfiniteScroll(mockFetchFunction),
+    );
 
     await waitFor(() => {
       expect(mockLogout).toHaveBeenCalled();
+      expect(result.current.error).toBe(authError);
+      expect(result.current.hasMore).toBe(false);
+      expect(result.current.loading).toBe(false);
     });
 
     consoleErrorSpy.mockRestore();
@@ -150,5 +156,30 @@ describe('useInfiniteScroll Hook', () => {
     expect(result.current.hasMore).toBe(false);
     expect(firstFetch).toHaveBeenCalledTimes(1);
     expect(secondFetch).toHaveBeenCalledTimes(1);
+  });
+
+  test('should set error state and stop fetching on a generic network error', async () => {
+    const consoleErrorSpy = jest
+      .spyOn(console, 'error')
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      .mockImplementation(() => {});
+
+    const mockError = new Error('API is down');
+    mockFetchFunction.mockRejectedValue(mockError);
+
+    const { result } = renderHook(() =>
+      useInfiniteScroll(mockFetchFunction),
+    );
+
+    await waitFor(() => {
+      expect(result.current.loading).toBe(false);
+    });
+
+    expect(result.current.error).toEqual(mockError);
+    expect(result.current.hasMore).toBe(false);
+    expect(result.current.items).toEqual([]);
+    expect(mockFetchFunction).toHaveBeenCalledTimes(1);
+
+    consoleErrorSpy.mockRestore();
   });
 });

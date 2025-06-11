@@ -17,3 +17,11 @@
 .pwa-install-button:hover {
   background-color: #333333;
 }
+
+@media (max-width: 680px) {
+  .pwa-install-button {
+    bottom: 80px;
+    left: auto;
+    right: 25px;
+  }
+}
