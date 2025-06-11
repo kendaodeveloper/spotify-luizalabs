@@ -1,3 +1,5 @@
+import './SectionHeader.css';
+
 interface SectionHeaderProps {
   title: string;
   subtitle?: string;

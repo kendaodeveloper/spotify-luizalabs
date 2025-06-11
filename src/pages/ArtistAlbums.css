@@ -1,0 +1,39 @@
+.artist-name {
+  font-size: 18px;
+  color: #fff;
+  font-weight: bold;
+}
+
+.artist-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.artist-info {
+  display: flex;
+  align-items: center;
+  padding: 25px 0px;
+}
+
+.artist-back-link {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  gap: 8px;
+}
+
+.artist-back-icon {
+  font-size: 20px;
+  padding: 10px;
+}
+
+.artist-header-image {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+}

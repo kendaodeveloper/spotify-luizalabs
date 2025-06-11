@@ -1,0 +1,39 @@
+
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100vh;
+  gap: 20px;
+}
+
+.profile-image {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 10px #1DB954;
+}
+
+.profile-placeholder {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  background-color: #1DB954;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #121212;
+  font-size: 64px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.profile-name {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #fff;
+}

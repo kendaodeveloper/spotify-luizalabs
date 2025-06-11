@@ -1,3 +1,5 @@
+import './Modal.css';
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;

@@ -15,6 +15,7 @@ export function useInfiniteScroll<T>(
   const [hasMore, setHasMore] = useState<boolean>(true);
   const offsetRef = useRef<number>(0);
   const observer = useRef<IntersectionObserver | null>(null);
+  const loadingRef = useRef<boolean>(false);
 
   const LIMIT = 20;
 
@@ -25,8 +26,9 @@ export function useInfiniteScroll<T>(
   }, []);
 
   const loadMoreItems = useCallback(async () => {
-    if (!token || loading) return;
+    if (!token || loadingRef.current) return;
 
+    loadingRef.current = true;
     setLoading(true);
 
     try {
@@ -41,9 +43,10 @@ export function useInfiniteScroll<T>(
         logout();
       }
     } finally {
+      loadingRef.current = false;
       setLoading(false);
     }
-  }, [token, loading, fetchFunction, logout]);
+  }, [token, fetchFunction, logout]);
 
   useEffect(() => {
     reset();

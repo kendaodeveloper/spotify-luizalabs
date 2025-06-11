@@ -1,3 +1,5 @@
+import './Artists.css';
+
 import { useCallback } from 'react';
 import { Link } from 'react-router';
 import { getTopArtists } from '../api/Spotify.api';

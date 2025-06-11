@@ -1,3 +1,5 @@
+import './Loading.css';
+
 import { LoaderCircle } from 'lucide-react';
 
 interface LoadingProps {

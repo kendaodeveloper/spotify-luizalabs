@@ -1,3 +1,5 @@
+import './Sidebar.css';
+
 import { NavLink } from 'react-router';
 import { Home, DiscAlbum, Play, User } from 'lucide-react';
 import SpotifyImage from './../assets/spotify.png';

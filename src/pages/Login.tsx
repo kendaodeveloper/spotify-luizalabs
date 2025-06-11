@@ -1,3 +1,5 @@
+import './Login.css';
+
 import SpotifyImage from './../assets/spotify.png';
 import {
   generateRandomString,

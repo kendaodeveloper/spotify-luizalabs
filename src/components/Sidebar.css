@@ -1,0 +1,59 @@
+
+.sidebar {
+  min-width: 200px;
+  background-color: #040404;
+  padding-left: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  padding: 5px 0;
+  color: #b3b3b3;
+  font-weight: bold;
+  text-decoration: none;
+  transition: color 0.2s ease-in-out;
+}
+
+.sidebar nav a:hover {
+    color: #ffffff;
+}
+
+.sidebar nav a.active {
+  color: #ffffff;
+}
+
+.sidebar nav ul {
+  list-style: none;
+  padding: 24px 0 0 0;
+  margin: 0;
+}
+
+.sidebar nav li {
+  padding: 12px 0;
+  cursor: pointer;
+  color: #b3b3b3;
+  font-weight: bold;
+  transition: color 0.2s ease-in-out;
+}
+
+.sidebar nav li:hover {
+    color: #ffffff;
+}
+
+.sidebar nav li.active {
+  color: #ffffff;
+}
+
+.sidebar-icon {
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+.spotify-sidebar {
+  width: 167px;
+  height: 50px;
+  margin: 10px 0;
+}

@@ -1,0 +1,22 @@
+
+.login-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  justify-content: center;
+  text-align: center;  
+  min-height: 80vh; 
+  padding: 20px;
+}
+
+.login-container h1 {
+  font-size: 2.5rem;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.spotify-icon {
+  width: 250px;
+  height: 75px;
+  margin: 10px 0;
+}

@@ -1,0 +1,11 @@
+
+.main-content {
+  flex-grow: 1;
+  padding: 24px 40px;
+  overflow-y: auto;
+}
+
+.home-layout {
+  display: flex;
+  height: 100vh;
+}

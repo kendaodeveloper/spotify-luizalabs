@@ -1,3 +1,5 @@
+import './Profile.css';
+
 import { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { getUserProfile } from '../api/Spotify.api';

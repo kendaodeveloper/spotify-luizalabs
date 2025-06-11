@@ -1,3 +1,5 @@
+import './ArtistAlbums.css';
+
 import { useCallback } from 'react';
 import { useParams, useLocation, Link } from 'react-router';
 import { ArrowLeft } from 'lucide-react';

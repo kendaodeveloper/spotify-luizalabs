@@ -1,3 +1,5 @@
+import './Playlists.css';
+
 import { useState, useEffect, useCallback } from 'react';
 import { useAuth } from '../context/AuthContext';
 import {
@@ -73,7 +75,7 @@ const Playlists: React.FC = () => {
 
   return (
     <section>
-      <div className="artist-header">
+      <div className="playlist-header">
         <SectionHeader
           title="Minhas Playlists"
           subtitle="Sua coleção pessoal de playlists"
